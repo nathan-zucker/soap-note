@@ -1,26 +1,53 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, SafeAreaView, Button } from 'react-native';
+import { StyleSheet, Text, View, SafeAreaView, Button, Pressable, Alert } from 'react-native';
+import { useState } from 'react';
+import { Provider } from 'react-redux';
+import store from './app/store';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+
 
 import Nav from './components/Nav';
+import Soap from './components/Soap';
+
+const Stack = createNativeStackNavigator();
 
 export default function App() {
+  
   return (
-    <View style={styles.container}>
-      <View style={styles.topPadding}></View>
-      <Nav />
-      <Button
-        onPress={() => {
-          console.log('You tapped the button!');
-        }}
-        title="Press Me"
-      />
-      <Text>Welcome to the SOAP note app!</Text>
-      <SafeAreaView>
-        <Text>Here is the safe area view.</Text>
-      </SafeAreaView>
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer>
+      <Provider store={store}>
+        <Stack.Navigator>
+          <Stack.Screen name='Home' component={HomeScreen} />
+          <Stack.Screen name='SOAP' component={Soap} />
+        </Stack.Navigator>
+      </Provider>
+    </NavigationContainer>
   );
+}
+
+function HomeScreen({navigation}){
+  return (
+    <View style={styles.homeScreen}>
+      <Pressable
+        style={styles.button}
+        onPress={()=>{
+          console.log('checkup')
+          Alert.alert('checkup!')
+        }}
+        >
+        <Text style={{fontSize: 22}}>checkup</Text>
+      </Pressable>
+      <Pressable
+        style={Object.assign({}, styles.button, {backgroundColor: 'limegreen'})}
+        onPress={()=>
+          navigation.navigate('SOAP')
+          }
+        >
+        <Text style={{fontSize: 22, fontWeight: 500}}>New SOAP</Text>
+      </Pressable>
+    </View>
+  )
 }
 
 const styles = StyleSheet.create({
@@ -28,21 +55,27 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'top',
-    backgroundColor: '#cdcdcd'
+    backgroundColor: '#4d4d4d'
   },
   topPadding: {
     height: '3%',
     width: '100%'
   },
-  navbar: {
-    color: 'whitesmoke',
-    backgroundColor: '#1a1a1a',
-    width: '100%',
-    textAlign: 'center',
-    height: '12.5%',
-    fontSize: 25,
-    display: 'flex',
+  button: {
+    backgroundColor: 'white',
+    width: '40%',
+    height: '20%',
+    margin: '10%',
     justifyContent: 'center',
-    padding: '5%'
+    alignItems: 'center',
+    borderRadius: '5%'
   },
+  homeScreen: {
+    backgroundColor: '#3a443a',
+    flexDirection: 'column',
+    width: '100%',
+    height: '100%',
+    alignItems: 'center',
+    justifyContent: 'top',
+  }
 });

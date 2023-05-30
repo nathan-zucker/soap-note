@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View, SafeAreaView, Button, Alert, Pressable } from 'react-native';
 
-export default function Nav() {
+export default function Nav({navigation}) {
     return (
         <View 
             style={styles.container}
@@ -18,10 +18,9 @@ export default function Nav() {
                 style={Object.assign({}, styles.button, {
                     backgroundColor: 'limegreen'
                 })}
-                onPress={()=>{
-                    console.log('new patient')
-                    Alert.alert('new patient!')
-                }}
+                onPress={()=>
+                    navigation.navigate('SOAP')
+                }
             >
                 <Text style={{fontSize: 22, fontWeight: 500}}>New SOAP</Text>
             </Pressable>
