@@ -6,14 +6,12 @@ import store from './app/store';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-
 import Nav from './components/Nav';
 import Soap from './components/Soap';
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
-  
   return (
     <NavigationContainer>
       <Provider store={store}>
