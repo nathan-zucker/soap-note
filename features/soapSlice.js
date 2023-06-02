@@ -11,8 +11,8 @@ export const soapSlice = createSlice({
         },
         objective: {
             vitals: [],
-            allergies: [],
-            medication: [],
+            allergies: '',
+            medication: '',
             PPMH: '',
 
         }

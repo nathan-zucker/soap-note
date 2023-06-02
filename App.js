@@ -8,6 +8,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import Nav from './components/Nav';
 import Soap from './components/Soap';
+import Patients from './components/Patients';
 
 const Stack = createNativeStackNavigator();
 
@@ -17,7 +18,8 @@ export default function App() {
       <Provider store={store}>
         <Stack.Navigator>
           <Stack.Screen name='Home' component={HomeScreen} />
-          <Stack.Screen name='SOAP' component={Soap} />
+          <Stack.Screen name='Soap' component={Soap} />
+          <Stack.Screen name='Patients' component={Patients} />
         </Stack.Navigator>
       </Provider>
     </NavigationContainer>
@@ -30,8 +32,7 @@ function HomeScreen({navigation}){
       <Pressable
         style={styles.button}
         onPress={()=>{
-          console.log('checkup')
-          Alert.alert('checkup!')
+          navigation.navigate('Patients')
         }}
         >
         <Text style={{fontSize: 22}}>checkup</Text>
@@ -39,7 +40,7 @@ function HomeScreen({navigation}){
       <Pressable
         style={Object.assign({}, styles.button, {backgroundColor: 'limegreen'})}
         onPress={()=>
-          navigation.navigate('SOAP')
+          navigation.navigate('Soap')
           }
         >
         <Text style={{fontSize: 22, fontWeight: 500}}>New SOAP</Text>

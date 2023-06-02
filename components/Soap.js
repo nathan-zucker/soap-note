@@ -166,11 +166,11 @@ function History({navigation}) {
                 </View>
                 <View style={styles.ampleRow}>
                     <Text style={styles.ampleLabel}>Last In: </Text>
-                    <TextInput style={styles.ampleInput} keyboardType='number-pad'></TextInput>
+                    <TextInput style={styles.ampleInput}></TextInput>
                 </View>
                 <View style={styles.ampleRow}>
                     <Text style={styles.ampleLabel}>Last Out: </Text>
-                    <TextInput style={styles.ampleInput} keyboardType='number-pad'></TextInput>
+                    <TextInput style={styles.ampleInput}></TextInput>
                 </View>
 
                 <Pressable
