@@ -14,6 +14,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import { storeSubjective, storeVitalsSnapshot } from '../features/soapSlice';
+import { addPatient, updatePatient } from '../features/patientsSlice';
 
 const Stack = createNativeStackNavigator();
 
@@ -62,6 +63,7 @@ function Subjective({navigation}){
                 style={styles.button}
                 onPress={()=>{
                     dispatch(storeSubjective(subjective))
+                    dispatch(addPatient(subjective))
                     navigation.navigate("Vitals")
                 }}
                 >
@@ -80,8 +82,11 @@ function Vitals({navigation}) {
      console.log(hour,':',min)
      
      */
+    const patients = useSelector(state => state.patients)
+    const soap = useSelector(state => state.soap)
 
     const dispatch = useDispatch()
+    
     const [vitalSnap, setVitalSnap] = useState({
         LOC: '',
         HR: '',

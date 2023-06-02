@@ -1,5 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+import { VitalSnap } from "./patientsSlice";
+
+
 export const soapSlice = createSlice({
     name: 'soap',
     initialState: {
@@ -26,13 +29,9 @@ export const soapSlice = createSlice({
             })
         },
         storeVitalsSnapshot: (state, action) => {
-            let time = new Date().getTime()
-            let snap = Object.assign({}, action.payload, {
-                time: time
-            })
             let newVitals = [...state.objective.vitals]
-            newVitals.push(snap)
-            console.log(newVitals, newVitals.length)
+            newVitals.push(new VitalSnap(action.payload.LOC, action.payload.HR, action.payload.RR, action.payload.skin))
+            console.log("vitals updated --->", newVitals)
             return Object.assign({}, state, {
                 objective: Object.assign({}, state.objective, {
                     vitals: newVitals,
