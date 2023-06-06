@@ -43,7 +43,7 @@ export const soapSlice = createSlice({
             let newVitals = [...state.objective.vitals]
             let factor = state.timer.factor
             newVitals.push(new VitalSnap(action.payload.LOC, action.payload.HR * factor, action.payload.RR * factor, action.payload.skin))
-            console.log("vitals updated --->", newVitals)
+            //console.log("vitals updated --->", newVitals)
             return Object.assign({}, state, {
                 objective: Object.assign({}, state.objective, {
                     vitals: newVitals,

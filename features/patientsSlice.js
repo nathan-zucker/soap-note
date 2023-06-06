@@ -96,13 +96,14 @@ export const patientsSlice = createSlice({
     ],
     reducers: {
         addPatient: (state, action) => {
+            console.log('adding patient...')
             return [...state, Object.assign({}, new Patient(), {
                 subjective: action.payload,
                 name: action.payload.patientName,
             } )]
         },
         updatePatient: (state, action) => {
-            console.log("updating patient... data --->", action.payload)
+            console.log("updating patient... data --->", action.payload.name)
             return state;
         }
     }

@@ -19,7 +19,7 @@ export default function Patients({navigation}) {
     const soap = useSelector(state => state.soap)
 
     const patientList = (patients) => {
-        console.log('PATIENT --->',patients[0],'SOAP --->', soap)
+        //console.log('PATIENT --->',patients[0],'SOAP --->', soap)
         return [...patients, soap].map((patient, i) => {
             return (
                 <View key={i} style={styles.card}>

@@ -127,6 +127,17 @@ function Vitals({navigation}) {
         }
     }
 
+    const submit = (variable1) => {
+        console.log('HELLO--->',variable1)
+        dispatch(storeVitalsSnapshot(vitalSnap))
+        dispatch(updatePatient(Object.assign({}, soap, {
+            vitals: [Object.assign({}, vitalSnap, {
+                time: new Date().getTime()
+            })]
+        })))
+        navigation.navigate("History")
+    }
+
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
             <View style={styles.vitalsGrid}>
@@ -200,15 +211,13 @@ function Vitals({navigation}) {
                         style={Object.assign({}, styles.button, {
                             marginTop: -10,
                         })}
-                        onPress={()=>{
-                            dispatch(storeVitalsSnapshot(vitalSnap))
-                            navigation.navigate("History")
-                        }}
+                        onPress={submit}
                         >
                         <Text>NEXT</Text>
                     </Pressable>
                     <Button
                         title='dev test'
+                        onPress={()=>submit('hello, there')}
                     />
                 </View>
             </View>
