@@ -15,14 +15,14 @@ export class VitalSnap {
     }
 }
 
-class Patient {
+export class Patient {
     constructor(name, age, sex) {
         return {
             name: name,
             subjective: {
-                patientName: name,
-                age: age,
-                sex: sex,
+                patientName: name || '',
+                age: age || '',
+                sex: sex || '',
                 CC: 'unknown'
             },
             objective: {
@@ -48,36 +48,36 @@ const johnDoe = () => {
                 {
                     time: 1685669772366,
                     LOC: 'AxO2',
-                    HR: '85',
+                    HR: '105',
                     RR: '25',
                     skin: 'PCC',
                 },
                 {
                     time: 1685670072366,
                     LOC: 'AxO2',
-                    HR: '80',
+                    HR: '102',
                     RR: '24',
                     skin: 'PCC',
                 },
                 {
                     time: 1685670372366,
                     LOC: 'AxO3',
-                    HR: '80',
+                    HR: '90',
                     RR: '22',
                     skin: 'PCC',
                 },
                 {
                     time: 1685670672366,
                     LOC: 'AxO3',
-                    HR: '90',
-                    RR: '25',
+                    HR: '95',
+                    RR: '20',
                     skin: 'norm',
                 },
                 {
                     time: 1685670972366,
                     LOC: 'AxO3',
-                    HR: '80',
-                    RR: '24',
+                    HR: '100',
+                    RR: '20',
                     skin: 'norm',
                 },
             ],
@@ -102,12 +102,11 @@ export const patientsSlice = createSlice({
             } )]
         },
         updatePatient: (state, action) => {
-            let patient = state.find(patient => patient.name === action.payload.name)
-            let index = state.indexOf(patient)
-            return state.splice(index, 1, patient)
+            console.log("updating patient... data --->", action.payload)
+            return state;
         }
     }
 })
 
-export const {addPatient} = patientsSlice.actions
+export const {addPatient, updatePatient} = patientsSlice.actions
 export default patientsSlice.reducer

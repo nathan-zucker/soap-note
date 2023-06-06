@@ -6,15 +6,19 @@ import {
     StyleSheet,
     Keyboard,
     TouchableWithoutFeedback,
+    Button,
+    Switch,
 } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-import { storeSubjective, storeVitalsSnapshot } from '../features/soapSlice';
+import { storeSubjective, storeVitalsSnapshot, changeTimerType, toggleTimer } from '../features/soapSlice';
 import { addPatient, updatePatient } from '../features/patientsSlice';
+
+import Timer from './Timer';
 
 const Stack = createNativeStackNavigator();
 
@@ -30,8 +34,6 @@ function Subjective({navigation}){
     return(
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
         <View style={styles.container}>
-            <Text>{subjective.patientName}, {subjective.age} y/o {subjective.sex}</Text>
-            <Text>Start entering patient's information.</Text>
             <Text>Name: </Text>
             <TextInput
                 style={styles.input}
@@ -39,20 +41,27 @@ function Subjective({navigation}){
                 onChangeText={(value)=>updateSubjective(Object.assign({}, subjective, {patientName: value}))}
                 placeholder='John Doe'
                 autoCapitalize='words'
-                />
-            <Text>Age: </Text>
-            <TextInput
-                style={Object.assign({}, styles.input, {width: '20%', height: '10%'})}
-                onChangeText={(value)=>updateSubjective(Object.assign({}, subjective, {age: value}))}
-                value={subjective.age}
-                keyboardType='number-pad'
-                />
-            <Text>Sex:</Text>
-            <TextInput
-                style={Object.assign({}, styles.input, {width: '40%'})}
-                onChangeText={(value)=>updateSubjective(Object.assign({}, subjective, {sex: value}))}
-                value={subjective.sex}
-                />
+            />
+            <View style={{width: '100%', flexDirection: 'row', justifyContent: 'center', alignItems: 'center',}}>
+                <View style={{flexDirection: 'column', width: '20%'}}>
+                    <Text>Age: </Text>
+                    <TextInput
+                        style={styles.input}
+                        onChangeText={(value)=>updateSubjective(Object.assign({}, subjective, {age: value}))}
+                        value={subjective.age}
+                        keyboardType='number-pad'
+                    />
+                </View>
+                <View style={{flexDirection: 'column', width: '20%'}}>
+                    <Text>Sex:</Text>
+                    <TextInput
+                        style={styles.input}
+                        onChangeText={(value)=>updateSubjective(Object.assign({}, subjective, {sex: value}))}
+                        value={subjective.sex}
+                        />
+
+                </View>
+            </View>
             <Text>Chief Complaint:</Text>
             <TextInput
                 style={styles.input}
@@ -69,21 +78,31 @@ function Subjective({navigation}){
                 >
                 <Text>NEXT</Text>
             </Pressable>
+
+            <Button
+                title='dev test'
+                onPress={()=>{
+                    const testSub = {
+                        patientName: 'Jane Doe',
+                        age: '32',
+                        sex: 'F',
+                        CC: 'unknown'
+                    }
+                    dispatch(storeSubjective(testSub))
+                    dispatch(addPatient(testSub))
+                    navigation.navigate("Vitals")
+                }}
+            />
+
         </View>
     </TouchableWithoutFeedback>
     )
 }
 
 function Vitals({navigation}) {
-    /**
-     let date = new Date()
-     let hour = date.getHours()
-     let min = date.getMinutes()
-     console.log(hour,':',min)
-     
-     */
     const patients = useSelector(state => state.patients)
     const soap = useSelector(state => state.soap)
+    const patientName = useSelector(state => state.soap.subjective.patientName)
 
     const dispatch = useDispatch()
     
@@ -93,12 +112,29 @@ function Vitals({navigation}) {
         RR: '',
         skin: '',
     })
+    const [timerToggle, toggleTimer] = useState(false)
+    const [timerActive, setTimerActive] = useState(false)
+    const [timerType, setTimerType] = useState(30)
+
+    const switchTimer = () => {
+        if (timerType === 30) {
+            setTimerType(60)
+            dispatch(changeTimerType(60))
+        }
+        else {
+            setTimerType(30)
+            dispatch(changeTimerType(30))
+        }
+    }
 
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
             <View style={styles.vitalsGrid}>
                 <View style={styles.vitalsRow}>
-                    <View style={styles.vitalsBox}>
+                    <View style={Object.assign({}, styles.vitalsBox, {
+                            width: '100%',
+                        })}
+                    >
                         <Text style={styles.vitalsLabel}>Level of Consciousness</Text>
                         <TextInput
                             style={Object.assign({}, styles.input, {width: 120})}
@@ -107,14 +143,36 @@ function Vitals({navigation}) {
                             />
                     </View>
                 </View>
-                <View style={styles.vitalsRow}>
-                    <View style={styles.vitalsBox}>
+                <View style={{backgroundColor: '#ddd', width: '100%', alignItems: 'center', paddingTop: 10, borderRadius: 7}}>
+                    <Switch
+                        value={timerToggle}
+                        onValueChange={()=>{
+                            toggleTimer(prevState => !prevState)
+                            switchTimer()
+                        }}
+                        disabled={timerActive}
+                        trackColor={{true: 'gray'}}
+                    />
+                </View>
+                <View style={Object.assign({}, styles.vitalsRow, {
+                    backgroundColor: '#ddd',
+                    paddingHorizontal: 12,
+                    paddingBottom: 6,
+                    alignItems: 'flex-end',
+                })}>
+                    <View style={Object.assign({}, styles.vitalsBox, {
+                        borderColor: 'blue',
+                    })}>
                         <Text style={styles.vitalsLabel}>Heart Rate</Text>
                         <TextInput
                             style={styles.number}
                             onChangeText={(value)=>setVitalSnap(Object.assign({}, vitalSnap, {HR: value}))}
                             keyboardType='number-pad'
-                            />
+                        />
+                        <Text style={{fontSize: 10, color: '#922'}}>per <Text style={{fontWeight: 600, color: 'orangered'}}>{timerType}</Text> seconds</Text>
+                    </View>
+                    <View style={styles.timer}>
+                        <Timer timerType={timerType} />
                     </View>
                     <View style={styles.vitalsBox}>
                         <Text style={styles.vitalsLabel}>Respiratory Rate</Text>
@@ -123,10 +181,13 @@ function Vitals({navigation}) {
                             onChangeText={(value)=>setVitalSnap(Object.assign({}, vitalSnap, {RR: value}))}
                             keyboardType='number-pad'
                             />
+                        <Text style={{fontSize: 10, color: '#922'}}>per <Text style={{fontWeight: 600, color: 'orangered'}}>{timerType}</Text> seconds</Text>
                     </View>
                 </View>
                 <View style={styles.vitalsRow}>
-                    <View style={styles.vitalsBox}>
+                    <View style={Object.assign({}, styles.vitalsBox, {
+                        width: '100%',
+                    })}>
                         <Text style={styles.vitalsLabel}>Skin Color, Temperature, Moisture</Text>
                         <TextInput
                             style={styles.input}
@@ -136,7 +197,9 @@ function Vitals({navigation}) {
                 </View>
                 <View style={{width: '100%', alignItems: 'center'}}>
                     <Pressable
-                        style={styles.button}
+                        style={Object.assign({}, styles.button, {
+                            marginTop: -10,
+                        })}
                         onPress={()=>{
                             dispatch(storeVitalsSnapshot(vitalSnap))
                             navigation.navigate("History")
@@ -144,7 +207,9 @@ function Vitals({navigation}) {
                         >
                         <Text>NEXT</Text>
                     </Pressable>
-
+                    <Button
+                        title='dev test'
+                    />
                 </View>
             </View>
         </TouchableWithoutFeedback>
@@ -260,7 +325,7 @@ const styles = StyleSheet.create({
         alignItems: 'left'
     },
     vitalsRow: {
-        height: '25%',
+        height: '22.5%',
         width: '100%',
         flexDirection: 'row',
         justifyContent: 'center',
@@ -271,8 +336,10 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         textAlign: 'center',
         alignItems: 'center',
+        width: '35%',
     },
     vitalsLabel: {
+        textAlign: 'center',
         fontSize: 16,
         marginBottom: 3,
     },
@@ -301,5 +368,11 @@ const styles = StyleSheet.create({
         borderBottomColor: 'black',
         borderLeftColor: 'black',
         borderRightColor: 'black',
+    },
+    timer: {
+        width: '20%',
+        backgroundColor: '#ddd',
+        paddingTop: 8,
+        borderRadius: 7,
     }
 })

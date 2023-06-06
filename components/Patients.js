@@ -1,8 +1,6 @@
 import { View, Text, Pressable, Button, StyleSheet, Dimensions } from "react-native"
-import { useSelector } from "react-redux"
-
-import React from 'react';
-
+import { useSelector, useDispatch } from "react-redux"
+import React, {useEffect} from 'react';
 import {
     LineChart,
     BarChart,
@@ -11,6 +9,49 @@ import {
     ContributionGraph,
     StackedBarChart
 } from "react-native-chart-kit";
+
+import { updatePatient } from "../features/patientsSlice";
+
+
+export default function Patients({navigation}) {
+    const dispatch = useDispatch()
+    const store = useSelector(state => state)
+    const soap = useSelector(state => state.soap)
+
+    const patientList = (patients) => {
+        console.log('PATIENT --->',patients[0],'SOAP --->', soap)
+        return [...patients, soap].map((patient, i) => {
+            return (
+                <View key={i} style={styles.card}>
+                    <Text style={{fontWeight: 500}}>{patient.name} {patient.age} {patient.sex}</Text>
+                    <Text>CC: {patient.subjective.CC}</Text>
+                    {patient.objective.vitals.length > 0 ? 
+                    <View style={styles.vitals}>
+                        <VitalsChart vitals={patient.objective.vitals} />
+                    </View>
+                    : null}
+                    <View>
+                        <Text>Exam:</Text>
+                    </View>
+                    <View>
+                        <Text>Plan:</Text>
+                    </View>
+                </View>
+            )
+        })
+    }
+    
+    return (
+        <View style={styles.container}>
+            <Text>This tab will display active patients and allow you to read and write data.</Text>
+            {patientList(store.patients)}
+            <Button
+                onPress={()=>navigation.navigate('Soap')}
+                title='NEW SOAP'
+            />
+        </View>
+    )
+}
 
 const VitalsChart = (props) => {
     
@@ -157,43 +198,6 @@ const VitalsChart = (props) => {
 
 }
 
-//HR={[90, 80, 85, 80, 75]} RR={[23, 22, 21, 20, 19]}
-
-export default function Patients({navigation}) {
-    const store = useSelector(state => state)
-    console.log("store---> ",store);
-    
-    const patientList = (patients) => {
-        return patients.map((patient, i) => {
-            return (
-                <View key={i} style={styles.card}>
-                    <Text style={{fontWeight: 500}}>{patient.name} {patient.age} {patient.sex}</Text>
-                    <Text>CC: {patient.subjective.CC}</Text>
-                    <View style={styles.vitals}>
-                        <VitalsChart vitals={patient.objective.vitals} />
-                    </View>
-                    <View>
-                        <Text>Exam:</Text>
-                    </View>
-                    <View>
-                        <Text>Plan:</Text>
-                    </View>
-                </View>
-            )
-        })
-    }
-
-    return (
-        <View style={styles.container}>
-            <Text>This tab will display active patients and allow you to read and write data.</Text>
-            {patientList(store.patients)}
-            <Button
-                onPress={()=>navigation.navigate('Soap')}
-                title='NEW SOAP'
-            />
-        </View>
-    )
-}
 const styles = StyleSheet.create({
     container: {
         borderWidth: 2,
