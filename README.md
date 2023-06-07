@@ -16,3 +16,6 @@ https://reactnative.dev/docs/components-and-apis
 
 ### PrimeReact
 https://primereact.org/installation/
+
+## Legal
+https://www.ftc.gov/business-guidance/resources/mobile-health-apps-interactive-tool

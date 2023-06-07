@@ -24,12 +24,8 @@ const Stack = createNativeStackNavigator();
 
 function Subjective({navigation}){
     const dispatch = useDispatch()
-    const [subjective, updateSubjective] = useState({
-        patientName: '',
-        age: '',
-        sex: '',
-        CC: '',
-    })
+    const store = useSelector(state => state.soap)
+    const [subjective, updateSubjective] = useState(store.subjective)
 
     return(
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>

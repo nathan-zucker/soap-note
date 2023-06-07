@@ -7,7 +7,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import Nav from './components/Nav';
-import Soap from './components/Soap';
+import Soap from './components/SoapNote';
 import Patients from './components/Patients';
 
 const Stack = createNativeStackNavigator();

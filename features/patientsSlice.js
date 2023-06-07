@@ -19,6 +19,7 @@ export class Patient {
     constructor(name, age, sex) {
         return {
             name: name,
+            id: 0,
             subjective: {
                 patientName: name || '',
                 age: age || '',

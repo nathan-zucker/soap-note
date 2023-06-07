@@ -4,23 +4,25 @@ import { VitalSnap } from "./patientsSlice";
 
 import { Patient } from "./patientsSlice";
 
+const defaultTimer = {
+    type: 30,
+    active: false,
+    factor: 2,
+}
 
 export const soapSlice = createSlice({
     name: 'soap',
     initialState: Object.assign({}, new Patient(), {
-        timer: {
-            type: 30,
-            active: false,
-            factor: 2,
-        }
+        timer: defaultTimer,
     }),
     
     reducers: {
         changeTimerType: (state, action) => {
+            console.log('changing timer type', action.payload)
             return Object.assign({}, state, {
                 timer: Object.assign({}, state.timer, {
                     type: action.payload,
-                    factor: Math.floor(action.payload / 60)
+                    factor: Math.floor(60 / action.payload)
                 })
             });
         },
@@ -49,9 +51,15 @@ export const soapSlice = createSlice({
                     vitals: newVitals,
                 })
             })
+        },
+        loadPatient: (state, action) => {
+            console.log("STORE RECEIVED:",action.payload)
+            return Object.assign({}, action.payload, {
+                timer: defaultTimer,
+            })
         }
     }
 })
 
-export const {storeSubjective, storeVitalsSnapshot, changeTimerType, startStopState} = soapSlice.actions
+export const {storeSubjective, storeVitalsSnapshot, changeTimerType, startStopState, loadPatient} = soapSlice.actions
 export default soapSlice.reducer

@@ -1,4 +1,4 @@
-import { View, Text, Pressable, Button, StyleSheet, Dimensions } from "react-native"
+import { View, Text, Pressable, Button, StyleSheet, Dimensions, Alert } from "react-native"
 import { useSelector, useDispatch } from "react-redux"
 import React, {useEffect} from 'react';
 import {
@@ -9,32 +9,106 @@ import {
     ContributionGraph,
     StackedBarChart
 } from "react-native-chart-kit";
+import Ionicons from '@expo/vector-icons/Ionicons';
 
 import { updatePatient } from "../features/patientsSlice";
-
+import { loadPatient, changeTimerType } from "../features/soapSlice";
 
 export default function Patients({navigation}) {
     const dispatch = useDispatch()
     const store = useSelector(state => state)
     const soap = useSelector(state => state.soap)
+    const patientsData = useSelector(state => state.patients)
 
     const patientList = (patients) => {
-        //console.log('PATIENT --->',patients[0],'SOAP --->', soap)
-        return [...patients, soap].map((patient, i) => {
+        
+        function deletePatient(name, index) {
+            let displayName = name || `Unknown Patient`
+            
+            Alert.alert(`Delete ${displayName}`, `Are you sure you want to erase all patient data for ${displayName}?`, [
+                {
+                    text: 'Cancel',
+                    style: 'cancel',
+                    onPress: () => console.log('cancel pressed'),
+                },
+                {
+                    text: 'OK',
+                    onPress: () => console.log('delete patient...', name)
+                }
+            ])
+        }
+
+        function gotoVitals() {
+            console.log('taking new vital snapshot..')
+        }
+
+        function menu(name, index) {
+            console.log('opening options')
+            Alert.alert(`Update ${name}`, 'navigate to where you left off...', [
+                {
+                    text: 'Cancel',
+                    style: 'cancel',
+                    onPress: () => console.log('cancel pressed'),
+                },
+                {
+                    text: 'Go to SOAP',
+                    onPress: () => loadSoap(name, patientsData[index]),
+                }
+            ])
+        }
+
+        function loadSoap(name, data) {
+            console.log('loading soap note --->', name)
+            dispatch(loadPatient(data))
+            navigation.navigate('Soap')
+        }
+
+        return patients.map((patient, i) => {
+            console.log(patient.name, i)
             return (
                 <View key={i} style={styles.card}>
-                    <Text style={{fontWeight: 500}}>{patient.name} {patient.age} {patient.sex}</Text>
-                    <Text>CC: {patient.subjective.CC}</Text>
-                    {patient.objective.vitals.length > 0 ? 
+                    <View style={styles.patientHeader}>
+                        <View>
+                            <Text style={{fontWeight: 500}}>{patient.name} {patient.age} {patient.sex}</Text>
+                            <Text>CC: {patient.subjective.CC}</Text>
+                        </View>
+                        <View style={{
+                                borderWidth: 2, borderColor: 'transparent',
+                                flexDirection: "row", gap: 12,
+                            }}>
+                            <Pressable 
+                                onPress={gotoVitals}
+                            >
+                                <Ionicons name="clipboard" size={32} color="gray" />
+                            </Pressable>
+                            <Pressable
+                                onPress={() => menu(patient.name, i)}
+                            >
+                                <Ionicons name="menu" size={32} color="gray" />
+                            </Pressable>
+                        </View>
+                    </View>
+
                     <View style={styles.vitals}>
                         <VitalsChart vitals={patient.objective.vitals} />
                     </View>
-                    : null}
+                    
                     <View>
                         <Text>Exam:</Text>
                     </View>
+                    
                     <View>
                         <Text>Plan:</Text>
+                    </View>
+
+                    <View style={{width: '100%', flexDirection: 'row', justifyContent: 'center'}}>
+                        <Pressable
+                            style={{backgroundColor: 'orangered', flexDirection: 'row', justifyContent: 'center', paddingVertical: 2, paddingHorizontal: 6, borderRadius: 15,}}
+                            onPress={() => deletePatient(patient.name, i)}    
+                        >
+                            <Ionicons name="close-circle-outline" size={16} color="black" />
+                            <Text>Delete</Text>
+                        </Pressable>
                     </View>
                 </View>
             )
@@ -43,17 +117,18 @@ export default function Patients({navigation}) {
     
     return (
         <View style={styles.container}>
-            <Text>This tab will display active patients and allow you to read and write data.</Text>
             {patientList(store.patients)}
             <Button
                 onPress={()=>navigation.navigate('Soap')}
-                title='NEW SOAP'
+                title='NEW PATIENT'
             />
         </View>
     )
 }
 
 const VitalsChart = (props) => {
+
+    if (props.vitals.length === 0) { return }
     
     const height = 80
     const width = (Dimensions.get("window").width * 0.6 - 12)
@@ -93,7 +168,7 @@ const VitalsChart = (props) => {
                         backgroundGradientFrom: "white",
                         backgroundGradientTo: "white",
                         decimalPlaces: 0, // optional, defaults to 2dp
-                        color: (opacity = 1) => 'gray',
+                        color: (opacity = 1) => 'black',
                         labelColor: (opacity = 1) => 'black',
                         style: {
                             borderRadius: 16,
@@ -124,7 +199,7 @@ const VitalsChart = (props) => {
                     <Text style={Object.assign({}, styles.value, {
                         color: (()=>{
                             let hr = HR[HR.length - 1]
-                            if (hr > 60 && hr < 100) {
+                            if (hr >= 60 && hr <= 100) {
                                 return 'limegreen';
                             }
                             else {
@@ -183,7 +258,7 @@ const VitalsChart = (props) => {
                     <Text style={Object.assign({}, styles.value, {
                         color: (()=>{
                             let rr = RR[RR.length - 1]
-                            if (rr > 12 && rr < 20) {
+                            if (rr >= 12 && rr <= 20) {
                                 return 'limegreen';
                             }
                             else {
@@ -200,10 +275,13 @@ const VitalsChart = (props) => {
 
 const styles = StyleSheet.create({
     container: {
-        borderWidth: 2,
-        borderColor: 'black',
         justifyContent: 'center',
         alignItems: 'center',
+        borderWidth: 2,
+        borderColor: 'black',
+        borderRadius: 5,
+        gap: 5,
+        paddingTop: 5,
     },
     card: {
         width: '80%',
@@ -217,7 +295,7 @@ const styles = StyleSheet.create({
         fontSize: 20,
     },
     value: {
-        fontSize: 30,
+        fontSize: 25,
         fontWeight: 500,
     },
     box: {
@@ -227,5 +305,9 @@ const styles = StyleSheet.create({
         height: 80,
         alignItems: 'center',
         marginLeft: 2,
+    },
+    patientHeader: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
     }
 })
