@@ -10,7 +10,7 @@ import {
     Switch,
 } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useId } from 'react';
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -123,15 +123,17 @@ function Vitals({navigation}) {
         }
     }
 
-    const submit = (variable1) => {
-        console.log('HELLO--->',variable1)
+    const submit = () => {
+
+        console.log('SOAP ---> ', soap.name)
+        
         dispatch(storeVitalsSnapshot(vitalSnap))
         dispatch(updatePatient(Object.assign({}, soap, {
             vitals: [Object.assign({}, vitalSnap, {
                 time: new Date().getTime()
             })]
         })))
-        navigation.navigate("History")
+        //navigation.navigate("History")
     }
 
     return (

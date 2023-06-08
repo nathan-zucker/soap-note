@@ -4,17 +4,11 @@ import { VitalSnap } from "./patientsSlice";
 
 import { Patient } from "./patientsSlice";
 
-const defaultTimer = {
-    type: 30,
-    active: false,
-    factor: 2,
-}
+
 
 export const soapSlice = createSlice({
     name: 'soap',
-    initialState: Object.assign({}, new Patient(), {
-        timer: defaultTimer,
-    }),
+    initialState: new Patient(),
     
     reducers: {
         changeTimerType: (state, action) => {
@@ -53,10 +47,8 @@ export const soapSlice = createSlice({
             })
         },
         loadPatient: (state, action) => {
-            console.log("STORE RECEIVED:",action.payload)
-            return Object.assign({}, action.payload, {
-                timer: defaultTimer,
-            })
+            console.log("SOAP RECEIVED:")
+            return action.payload;
         }
     }
 })

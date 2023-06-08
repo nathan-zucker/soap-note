@@ -1,5 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+export const defaultTimer = {
+    type: 30,
+    active: false,
+    factor: 2,
+}
+
 export class VitalSnap {
     constructor(loc, hr, rr, skin){
         let time = new Date().getTime()
@@ -16,10 +22,10 @@ export class VitalSnap {
 }
 
 export class Patient {
-    constructor(name, age, sex) {
+    constructor(id, name, age, sex) {
         return {
             name: name,
-            id: 0,
+            id: id,
             subjective: {
                 patientName: name || '',
                 age: age || '',
@@ -38,12 +44,13 @@ export class Patient {
             },
             assessment: '',
             plan: '',
+            timer: defaultTimer,
         }
     }
 }
 
 const johnDoe = () => {
-    let JD = Object.assign({}, new Patient('John Doe', '35', 'M'), {
+    let JD = Object.assign({}, new Patient('JDid', 'John Doe', '35', 'M'), {
         objective: {
             vitals: [
                 {
@@ -98,13 +105,17 @@ export const patientsSlice = createSlice({
     reducers: {
         addPatient: (state, action) => {
             console.log('adding patient...')
-            return [...state, Object.assign({}, new Patient(), {
-                subjective: action.payload,
-                name: action.payload.patientName,
-            } )]
+            console.log(action.payload)
+            return state;
         },
         updatePatient: (state, action) => {
-            console.log("updating patient... data --->", action.payload.name)
+            let patient = state.find(patient => patient.name === action.payload.name)
+            let index = state.indexOf(patient)
+
+            let newPatients = [...state].splice(index, 1, patient)
+            console.log(index0, newPatients)
+            
+
             return state;
         }
     }

@@ -11,6 +11,7 @@ import {
 } from "react-native-chart-kit";
 import Ionicons from '@expo/vector-icons/Ionicons';
 
+
 import { updatePatient } from "../features/patientsSlice";
 import { loadPatient, changeTimerType } from "../features/soapSlice";
 
@@ -58,7 +59,7 @@ export default function Patients({navigation}) {
         }
 
         function loadSoap(name, data) {
-            console.log('loading soap note --->', name)
+            console.log('loading soap note --->', name, data)
             dispatch(loadPatient(data))
             navigation.navigate('Soap')
         }
