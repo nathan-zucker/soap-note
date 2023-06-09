@@ -49,9 +49,12 @@ export const soapSlice = createSlice({
         loadPatient: (state, action) => {
             console.log("SOAP RECEIVED:")
             return action.payload;
+        },
+        newSoap: (state) => {
+            return Object.assign({}, new Patient())
         }
     }
 })
 
-export const {storeSubjective, storeVitalsSnapshot, changeTimerType, startStopState, loadPatient} = soapSlice.actions
+export const {storeSubjective, storeVitalsSnapshot, changeTimerType, startStopState, loadPatient, newSoap} = soapSlice.actions
 export default soapSlice.reducer

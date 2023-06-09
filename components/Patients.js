@@ -13,7 +13,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 
 
 import { updatePatient } from "../features/patientsSlice";
-import { loadPatient, changeTimerType } from "../features/soapSlice";
+import { loadPatient, changeTimerType, newSoap } from "../features/soapSlice";
 
 export default function Patients({navigation}) {
     const dispatch = useDispatch()
@@ -64,6 +64,7 @@ export default function Patients({navigation}) {
             navigation.navigate('Soap')
         }
 
+        
         return patients.map((patient, i) => {
             console.log(patient.name, i)
             return (
@@ -74,17 +75,17 @@ export default function Patients({navigation}) {
                             <Text>CC: {patient.subjective.CC}</Text>
                         </View>
                         <View style={{
-                                borderWidth: 2, borderColor: 'transparent',
-                                flexDirection: "row", gap: 12,
-                            }}>
+                            borderWidth: 2, borderColor: 'transparent',
+                            flexDirection: "row", gap: 12,
+                        }}>
                             <Pressable 
                                 onPress={gotoVitals}
-                            >
+                                >
                                 <Ionicons name="clipboard" size={32} color="gray" />
                             </Pressable>
                             <Pressable
                                 onPress={() => menu(patient.name, i)}
-                            >
+                                >
                                 <Ionicons name="menu" size={32} color="gray" />
                             </Pressable>
                         </View>
@@ -106,7 +107,7 @@ export default function Patients({navigation}) {
                         <Pressable
                             style={{backgroundColor: 'orangered', flexDirection: 'row', justifyContent: 'center', paddingVertical: 2, paddingHorizontal: 6, borderRadius: 15,}}
                             onPress={() => deletePatient(patient.name, i)}    
-                        >
+                            >
                             <Ionicons name="close-circle-outline" size={16} color="black" />
                             <Text>Delete</Text>
                         </Pressable>
@@ -115,12 +116,16 @@ export default function Patients({navigation}) {
             )
         })
     }
+    function createNewSoap() {
+        dispatch(newSoap())
+        navigation.navigate('Soap')
+    }
     
     return (
         <View style={styles.container}>
             {patientList(store.patients)}
             <Button
-                onPress={()=>navigation.navigate('Soap')}
+                onPress={createNewSoap}
                 title='NEW PATIENT'
             />
         </View>

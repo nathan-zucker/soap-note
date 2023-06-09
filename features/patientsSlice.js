@@ -30,7 +30,7 @@ export class Patient {
                 patientName: name || '',
                 age: age || '',
                 sex: sex || '',
-                CC: 'unknown'
+                CC: ''
             },
             objective: {
                 vitals: [],

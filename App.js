@@ -1,7 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, SafeAreaView, Button, Pressable, Alert } from 'react-native';
 import { useState } from 'react';
-import { Provider } from 'react-redux';
+import { Provider, useSelector, useDispatch } from 'react-redux';
 import store from './app/store';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -9,6 +9,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Nav from './components/Nav';
 import Soap from './components/SoapNote';
 import Patients from './components/Patients';
+import { newSoap } from './features/soapSlice';
 
 const Stack = createNativeStackNavigator();
 
@@ -27,6 +28,13 @@ export default function App() {
 }
 
 function HomeScreen({navigation}){
+  const dispatch = useDispatch()
+  
+  function loadNewSoap() {
+    navigation.navigate('Soap')
+    dispatch(newSoap())
+  }
+
   return (
     <View style={styles.homeScreen}>
       <Pressable
@@ -39,9 +47,7 @@ function HomeScreen({navigation}){
       </Pressable>
       <Pressable
         style={Object.assign({}, styles.button, {backgroundColor: 'limegreen'})}
-        onPress={()=>
-          navigation.navigate('Soap')
-          }
+        onPress={loadNewSoap}
         >
         <Text style={{fontSize: 22, fontWeight: 500}}>New SOAP</Text>
       </Pressable>
