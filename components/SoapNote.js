@@ -9,6 +9,8 @@ import {
     Button,
     Switch,
 } from 'react-native';
+import Ionicons from '@expo/vector-icons/Ionicons';
+
 import { useSelector, useDispatch } from 'react-redux';
 import { useState, useEffect, useId } from 'react';
 
@@ -16,7 +18,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import { storeSubjective, storeVitalsSnapshot, changeTimerType, toggleTimer } from '../features/soapSlice';
-import { addPatient, updatePatient } from '../features/patientsSlice';
+import { addPatient, updatePatient, storeVitalSnap } from '../features/patientsSlice';
 
 import Timer from './Timer';
 
@@ -48,13 +50,49 @@ function Subjective({navigation}){
                         keyboardType='number-pad'
                     />
                 </View>
-                <View style={{flexDirection: 'column', width: '20%'}}>
-                    <Text>Sex:</Text>
-                    <TextInput
-                        style={styles.input}
-                        onChangeText={(value)=>updateSubjective(Object.assign({}, subjective, {sex: value}))}
-                        value={subjective.sex}
-                        />
+                <View style={{flexDirection: 'column'}}>
+                    <Text style={{textDecorationLine: 'underline', marginBottom: 3,}}>Sex: {subjective.sex}</Text>
+                    <View style={styles.sexOptions}>
+                        <Pressable
+                            style={Object.assign({}, styles.sexButton, {
+                                borderColor: (()=>{
+                                    if (subjective.sex === 'M') {
+                                        return 'limegreen'
+                                    }
+                                    return 'transparent'
+                                })()
+                            })}
+                            onPress={()=>updateSubjective(Object.assign({}, subjective, {sex: 'M'}))}
+                            >
+                            <Ionicons name='male' size={36} color='#2986CC' />
+                        </Pressable>
+                        <Pressable
+                            style={Object.assign({}, styles.sexButton, {
+                                borderColor: (()=>{
+                                    if (subjective.sex === 'F') {
+                                        return 'limegreen'
+                                    }
+                                    return 'transparent'
+                                })()
+                            })}
+                            onPress={()=>updateSubjective(Object.assign({}, subjective, {sex: 'F'}))}
+                        >
+                            <Ionicons name='female' size={36} color='#C90076' />
+                        </Pressable>
+                        <Pressable
+                            style={Object.assign({}, styles.sexButton, {
+                                borderColor: (()=>{
+                                    if (subjective.sex === 'U') {
+                                        return 'limegreen'
+                                    }
+                                    return 'transparent'
+                                })()
+                            })}
+                            onPress={()=>updateSubjective(Object.assign({}, subjective, {sex: 'U'}))}
+                            >
+                            <Ionicons name='transgender' size={36} color='white' />
+                        </Pressable>
+                    </View>
 
                 </View>
             </View>
@@ -128,12 +166,12 @@ function Vitals({navigation}) {
         console.log('SOAP ---> ', soap.name)
         
         dispatch(storeVitalsSnapshot(vitalSnap))
-        dispatch(updatePatient(Object.assign({}, soap, {
-            vitals: [Object.assign({}, vitalSnap, {
-                time: new Date().getTime()
-            })]
-        })))
-        //navigation.navigate("History")
+        dispatch(updatePatient({
+            name: soap.name,
+            type: 'vitals',
+            data: vitalSnap,
+        }))
+        navigation.navigate("History")
     }
 
     return (
@@ -381,5 +419,16 @@ const styles = StyleSheet.create({
         backgroundColor: '#ddd',
         paddingTop: 8,
         borderRadius: 7,
+    },
+    sexOptions: {
+        flexDirection: 'row',
+        gap: 5,
+    },
+    sexButton: {
+        backgroundColor: '#1a1a1a',
+        padding: 5,
+        borderRadius: 10,
+        borderWidth: 3,
+        borderColor: 'transparent',
     }
 })

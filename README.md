@@ -17,5 +17,8 @@ https://reactnative.dev/docs/components-and-apis
 ### PrimeReact
 https://primereact.org/installation/
 
+### Ionicons
+https://ionic.io/ionicons/v4
+
 ## Legal
 https://www.ftc.gov/business-guidance/resources/mobile-health-apps-interactive-tool

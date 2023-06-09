@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { Alert } from "react-native";
 
 export const defaultTimer = {
     type: 30,
@@ -104,22 +105,92 @@ export const patientsSlice = createSlice({
     ],
     reducers: {
         addPatient: (state, action) => {
-            console.log('adding patient...')
-            console.log(action.payload)
-            return state;
+            console.log('adding patient...', action.payload.patientName)
+            
+            let newPatient = Object.assign({}, new Patient(), {
+                subjective: action.payload
+            })
+            
+            let existingPatient = state.find(patient => patient.name === action.payload.patientName)
+            
+            if (existingPatient !== undefined) {
+                console.log(`updating ${existingPatient.name}...`)
+                let index = state.indexOf(existingPatient)
+                let updatedPatient = Object.assign({}, existingPatient, {
+                    subjective: Object.assign({}, existingPatient['subjective'], action.payload)
+                })
+                return [...(state.slice(0, index)), updatedPatient, ...(state.slice(index+1))]
+            }
+
+            if (action.payload.patientName === '') {
+                let numberOfJohns = 0;
+                let numberOfJanes = 0;
+
+                for (let i=0; i<state.length; i++) {
+                    if (state[i].name.match(/(John Doe)/)) {
+                        numberOfJohns++
+                    }
+                    if (state[i].name.match(/(Jane Doe)/)) {
+                        numberOfJanes++
+                    }
+                }
+
+                switch (action.payload.sex) {
+                    case 'F': 
+                        newPatient = Object.assign({}, newPatient, {
+                            name: `Jane Doe ${numberOfJanes + 1}`,
+                            subjective: Object.assign({}, newPatient.subjective, {
+                                patientName: `Jane Doe ${numberOfJanes + 1}`,
+                            }),
+                        });
+                        return [...state, newPatient]   
+                    case '':
+                    case 'M':
+                    case 'U':
+                        newPatient = Object.assign({}, newPatient, {
+                            name: `John Doe ${numberOfJohns + 1}`,
+                            subjective: Object.assign({}, newPatient.subjective, {
+                                patientName: `John Doe ${numberOfJohns + 1}`,
+                            }),
+                        });
+                        return [...state, newPatient]
+                    default: return [...state, newPatient]
+                }
+            }
+            return [...state, newPatient]
         },
         updatePatient: (state, action) => {
-            let patient = state.find(patient => patient.name === action.payload.name)
-            let index = state.indexOf(patient)
+            const { name, type, data } = action.payload
+            switch(type) {
+                case 'vitals':
+                    if (data.RR === '' || data.HR === '') { return }
+                    
+                    console.log(`update vitals for ${name}`)
+                    let patient = state.find(patient => patient.name === name)
+                    let index = state.indexOf(patient)
+                    let rr = data.RR * patient.timer.factor
+                    let hr = data.HR * patient.timer.factor
 
-            let newPatients = [...state].splice(index, 1, patient)
-            console.log(index0, newPatients)
-            
+                    let updatedPatient = Object.assign({}, patient, {
+                        objective: Object.assign({}, patient.objective, {
+                            vitals: [...patient.objective.vitals, Object.assign({}, data, {RR: rr, HR: hr})],
+                        })
+                    })
+                    return [...state.slice(0, index), updatedPatient, ...state.slice(index + 1)]
 
+                case 'history':
+                    return;
+                default: console.log("failed to catch")
+            }
+
+// WORK IN PROGRESS
             return state;
+        },
+        storeVitalSnap: (state, action) => {
+            
         }
     }
 })
 
-export const {addPatient, updatePatient} = patientsSlice.actions
+export const {addPatient, updatePatient, storeVitalSnap} = patientsSlice.actions
 export default patientsSlice.reducer

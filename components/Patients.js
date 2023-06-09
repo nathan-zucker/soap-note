@@ -66,7 +66,7 @@ export default function Patients({navigation}) {
 
         
         return patients.map((patient, i) => {
-            console.log(patient.name, i)
+            //console.log(patient.name, i)
             return (
                 <View key={i} style={styles.card}>
                     <View style={styles.patientHeader}>
