@@ -11,11 +11,16 @@ import {
 } from "react-native-chart-kit";
 import Ionicons from '@expo/vector-icons/Ionicons';
 
+import 'react-native-gesture-handler';
+import { createDrawerNavigator } from "@react-navigation/drawer";
+
+
+import VitalsCheckup from "./VitalsCheckup";
 
 import { updatePatient } from "../features/patientsSlice";
 import { loadPatient, changeTimerType, newSoap } from "../features/soapSlice";
 
-export default function Patients({navigation}) {
+export function Patients({navigation}) {
     const dispatch = useDispatch()
     const store = useSelector(state => state)
     const soap = useSelector(state => state.soap)
@@ -277,6 +282,17 @@ const VitalsChart = (props) => {
         </View>
     )
 
+}
+
+const Drawer = createDrawerNavigator();
+
+export default function PatientView() {
+    return(
+        <Drawer.Navigator >
+            <Drawer.Screen name='Patients' component={Patients} />
+            <Drawer.Screen name='Checkup' component={VitalsCheckup} />
+        </Drawer.Navigator>
+    )
 }
 
 const styles = StyleSheet.create({

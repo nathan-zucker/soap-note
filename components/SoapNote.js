@@ -167,7 +167,7 @@ function Vitals({navigation}) {
         
         dispatch(storeVitalsSnapshot(vitalSnap))
         dispatch(updatePatient({
-            name: soap.name,
+            name: soap.name || patients[patients.length - 1].name,
             type: 'vitals',
             data: vitalSnap,
         }))

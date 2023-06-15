@@ -5,23 +5,24 @@ import { Provider, useSelector, useDispatch } from 'react-redux';
 import store from './app/store';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createDrawerNavigator } from '@react-navigation/drawer';
 
 import Nav from './components/Nav';
 import Soap from './components/SoapNote';
-import Patients from './components/Patients';
+import PatientView from './components/Patients';
 import { newSoap } from './features/soapSlice';
 
-const Stack = createNativeStackNavigator();
+const Drawer = createDrawerNavigator();
 
 export default function App() {
   return (
     <NavigationContainer>
       <Provider store={store}>
-        <Stack.Navigator>
-          <Stack.Screen name='Home' component={HomeScreen} />
-          <Stack.Screen name='Soap' component={Soap} />
-          <Stack.Screen name='Patients' component={Patients} />
-        </Stack.Navigator>
+        <Drawer.Navigator>
+          <Drawer.Screen name='Home' component={HomeScreen} />
+          <Drawer.Screen name='Soap' component={Soap} />
+          <Drawer.Screen name='Patients' component={PatientView} />
+        </Drawer.Navigator>
       </Provider>
     </NavigationContainer>
   );
