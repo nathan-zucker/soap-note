@@ -20,5 +20,8 @@ https://primereact.org/installation/
 ### Ionicons
 https://ionic.io/ionicons/v4
 
+### React Native Reanimated
+https://docs.swmansion.com/react-native-reanimated/docs/fundamentals/installation
+
 ## Legal
 https://www.ftc.gov/business-guidance/resources/mobile-health-apps-interactive-tool
