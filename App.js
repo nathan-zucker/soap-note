@@ -20,7 +20,7 @@ export default function App() {
       <Provider store={store}>
         <Drawer.Navigator>
           <Drawer.Screen name='Home' component={HomeScreen} />
-          <Drawer.Screen name='Soap' component={Soap} />
+          <Drawer.Screen name='New SOAP Note' component={Soap} />
           <Drawer.Screen name='Patients' component={PatientView} />
         </Drawer.Navigator>
       </Provider>

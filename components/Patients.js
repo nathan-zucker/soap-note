@@ -20,119 +20,97 @@ import VitalsCheckup from "./VitalsCheckup";
 import { updatePatient } from "../features/patientsSlice";
 import { loadPatient, changeTimerType, newSoap } from "../features/soapSlice";
 
-export function Patients({navigation}) {
-    const dispatch = useDispatch()
-    const store = useSelector(state => state)
-    const soap = useSelector(state => state.soap)
-    const patientsData = useSelector(state => state.patients)
+const PatientDrawer = createDrawerNavigator();
 
-    const patientList = (patients) => {
+function Patient({navigation, data}) {
+    const dispatch = useDispatch();
+
+    function deletePatient(name) {
+        let displayName = name || `Unknown Patient`
         
-        function deletePatient(name, index) {
-            let displayName = name || `Unknown Patient`
-            
-            Alert.alert(`Delete ${displayName}`, `Are you sure you want to erase all patient data for ${displayName}?`, [
-                {
-                    text: 'Cancel',
-                    style: 'cancel',
-                    onPress: () => console.log('cancel pressed'),
-                },
-                {
-                    text: 'OK',
-                    onPress: () => console.log('delete patient...', name)
-                }
-            ])
-        }
-
-        function gotoVitals() {
-            console.log('taking new vital snapshot..')
-        }
-
-        function menu(name, index) {
-            console.log('opening options')
-            Alert.alert(`Update ${name}`, 'navigate to where you left off...', [
-                {
-                    text: 'Cancel',
-                    style: 'cancel',
-                    onPress: () => console.log('cancel pressed'),
-                },
-                {
-                    text: 'Go to SOAP',
-                    onPress: () => loadSoap(name, patientsData[index]),
-                }
-            ])
-        }
-
-        function loadSoap(name, data) {
-            console.log('loading soap note --->', name, data)
-            dispatch(loadPatient(data))
-            navigation.navigate('Soap')
-        }
-
-        
-        return patients.map((patient, i) => {
-            //console.log(patient.name, i)
-            return (
-                <View key={i} style={styles.card}>
-                    <View style={styles.patientHeader}>
-                        <View>
-                            <Text style={{fontWeight: 500}}>{patient.name} {patient.age} {patient.sex}</Text>
-                            <Text>CC: {patient.subjective.CC}</Text>
-                        </View>
-                        <View style={{
-                            borderWidth: 2, borderColor: 'transparent',
-                            flexDirection: "row", gap: 12,
-                        }}>
-                            <Pressable 
-                                onPress={gotoVitals}
-                                >
-                                <Ionicons name="clipboard" size={32} color="gray" />
-                            </Pressable>
-                            <Pressable
-                                onPress={() => menu(patient.name, i)}
-                                >
-                                <Ionicons name="menu" size={32} color="gray" />
-                            </Pressable>
-                        </View>
-                    </View>
-
-                    <View style={styles.vitals}>
-                        <VitalsChart vitals={patient.objective.vitals} />
-                    </View>
-                    
-                    <View>
-                        <Text>Exam:</Text>
-                    </View>
-                    
-                    <View>
-                        <Text>Plan:</Text>
-                    </View>
-
-                    <View style={{width: '100%', flexDirection: 'row', justifyContent: 'center'}}>
-                        <Pressable
-                            style={{backgroundColor: 'orangered', flexDirection: 'row', justifyContent: 'center', paddingVertical: 2, paddingHorizontal: 6, borderRadius: 15,}}
-                            onPress={() => deletePatient(patient.name, i)}    
-                            >
-                            <Ionicons name="close-circle-outline" size={16} color="black" />
-                            <Text>Delete</Text>
-                        </Pressable>
-                    </View>
-                </View>
-            )
-        })
+        Alert.alert(`Delete ${displayName}`, `Are you sure you want to erase all patient data for ${displayName}?`, [
+            {
+                text: 'Cancel',
+                style: 'cancel',
+                onPress: () => console.log('cancel pressed'),
+            },
+            {
+                text: 'OK',
+                onPress: () => console.log('delete patient...', name)
+            }
+        ])
     }
-    function createNewSoap() {
-        dispatch(newSoap())
-        navigation.navigate('Soap')
+
+    function gotoVitals() {
+        console.log('taking new vital snapshot..')
     }
-    
+
+    function menu(name) {
+        console.log('opening options')
+        Alert.alert(`Update ${name}`, 'navigate to where you left off...', [
+            {
+                text: 'Cancel',
+                style: 'cancel',
+                onPress: () => console.log('cancel pressed'),
+            },
+            {
+                text: 'Go to SOAP',
+                onPress: () => loadSoap(name, data),
+            }
+        ])
+    }
+
+    function loadSoap(name, data) {
+        console.log('loading soap note --->', name, data)
+        dispatch(loadPatient(data))
+        console.log('NAVIGATE TO SOAP')
+    }
+
     return (
-        <View style={styles.container}>
-            {patientList(store.patients)}
-            <Button
-                onPress={createNewSoap}
-                title='NEW PATIENT'
-            />
+        <View key={data.name} style={styles.card}>
+            <View style={styles.patientHeader}>
+                <View>
+                    <Text style={{fontWeight: 500}}>{data.name} {data.subjective.age} {data.subjective.sex}</Text>
+                    <Text>CC: {data.subjective.CC}</Text>
+                </View>
+                <View style={{
+                    borderWidth: 2, borderColor: 'transparent',
+                    flexDirection: "row", gap: 12,
+                }}>
+                <Pressable 
+                    onPress={gotoVitals}
+                    >
+                    <Ionicons name="clipboard" size={32} color="gray" />
+                </Pressable>
+                <Pressable
+                    onPress={() => menu(data.name)}
+                    >
+                    <Ionicons name="menu" size={32} color="gray" />
+                </Pressable>
+                </View>
+            </View>
+
+            <View style={styles.vitals}>
+                <VitalsChart vitals={data.objective.vitals} />
+            </View>
+                    
+            <View>
+                <Text>Exam:</Text>
+            </View>
+                    
+            <View>
+                <Text>Plan:</Text>
+            </View>
+
+            <View style={{width: '100%', flexDirection: 'row', justifyContent: 'center'}}>
+                <Pressable
+                    style={{backgroundColor: 'orangered', flexDirection: 'row', justifyContent: 'center', paddingVertical: 2, paddingHorizontal: 6, borderRadius: 15,}}
+                    onPress={() => deletePatient(data.name)}    
+                    >
+                    <Ionicons name="close-circle-outline" size={16} color="black" />
+                    <Text>Delete</Text>
+                </Pressable>
+            </View>
         </View>
     )
 }
@@ -284,13 +262,23 @@ const VitalsChart = (props) => {
 
 }
 
+function HomeScreen() {
+    return (
+        <View>
+            <Text>Here is a sub-menu of all the patients</Text>
+        </View>
+    )
+}
+
 const Drawer = createDrawerNavigator();
 
 export default function PatientView() {
+    const patients = useSelector(state => state.patients)
+
     return(
         <Drawer.Navigator >
-            <Drawer.Screen name='Patients' component={Patients} />
-            <Drawer.Screen name='Checkup' component={VitalsCheckup} />
+            <Drawer.Screen name='Patient Overview' component={HomeScreen} />
+            {patients.map(patient => <Drawer.Screen name={patient.name} key={patient.name} children={()=><Patient data={patient}/>} />)}
         </Drawer.Navigator>
     )
 }

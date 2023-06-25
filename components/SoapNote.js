@@ -32,23 +32,27 @@ function Subjective({navigation}){
     return(
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
         <View style={styles.container}>
-            <Text>Name: </Text>
-            <TextInput
-                style={styles.input}
-                value={subjective.patientName}
-                onChangeText={(value)=>updateSubjective(Object.assign({}, subjective, {patientName: value}))}
-                placeholder='John Doe'
-                autoCapitalize='words'
-            />
+            <Pressable>
+                <Text>Name: </Text>
+                <TextInput
+                    style={styles.input}
+                    value={subjective.patientName}
+                    onChangeText={(value)=>updateSubjective(Object.assign({}, subjective, {patientName: value}))}
+                    autoCapitalize='words'
+                />
+            </Pressable>
+            
             <View style={{width: '100%', flexDirection: 'row', justifyContent: 'center', alignItems: 'center',}}>
                 <View style={{flexDirection: 'column', width: '20%'}}>
-                    <Text>Age: </Text>
-                    <TextInput
-                        style={styles.input}
-                        onChangeText={(value)=>updateSubjective(Object.assign({}, subjective, {age: value}))}
-                        value={subjective.age}
-                        keyboardType='number-pad'
-                    />
+                    <Pressable>
+                        <Text>Age: </Text>
+                        <TextInput
+                            style={styles.input}
+                            onChangeText={(value)=>updateSubjective(Object.assign({}, subjective, {age: value}))}
+                            value={subjective.age}
+                            keyboardType='number-pad'
+                        />
+                    </Pressable>
                 </View>
                 <View style={{flexDirection: 'column'}}>
                     <Text style={{textDecorationLine: 'underline', marginBottom: 3,}}>Sex: {subjective.sex}</Text>
@@ -96,12 +100,15 @@ function Subjective({navigation}){
 
                 </View>
             </View>
-            <Text>Chief Complaint:</Text>
-            <TextInput
-                style={styles.input}
-                value={subjective.CC}
-                onChangeText={(value)=>updateSubjective(Object.assign( {}, subjective, {CC: value} ))}
-                />
+            <Pressable>
+                <Text>Chief Complaint:</Text>
+                <TextInput
+                    style={styles.input}
+                    value={subjective.CC}
+                    onChangeText={(value)=>updateSubjective(Object.assign( {}, subjective, {CC: value} ))}
+                    />
+
+            </Pressable>
             <Pressable
                 style={styles.button}
                 onPress={()=>{
