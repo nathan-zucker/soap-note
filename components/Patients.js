@@ -263,9 +263,15 @@ const VitalsChart = (props) => {
 }
 
 function HomeScreen() {
+
+    const patientsData = useSelector((state) => state.patients)
+
+    const patientNames = patientsData.map((patient) => patient.name)
+
     return (
         <View>
             <Text>Here is a sub-menu of all the patients</Text>
+            <Text>Current Patient{patientNames.length > 1 ? 's' : null}: {patientNames.join(', ')}</Text>
         </View>
     )
 }

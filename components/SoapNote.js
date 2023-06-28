@@ -16,12 +16,14 @@ import { useState, useEffect, useId } from 'react';
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createDrawerNavigator } from '@react-navigation/drawer';
 
 import { storeSubjective, storeVitalsSnapshot, changeTimerType, toggleTimer } from '../features/soapSlice';
 import { addPatient, updatePatient, storeVitalSnap } from '../features/patientsSlice';
 
 import Timer from './Timer';
 
+const Drawer = createDrawerNavigator()
 const Stack = createNativeStackNavigator();
 
 function Subjective({navigation}){
@@ -275,24 +277,34 @@ function History({navigation}) {
                 <Text>AMPLE History</Text>
 
                 <View style={styles.ampleRow}>
-                    <Text style={styles.ampleLabel}>Allergies: </Text>
-                    <TextInput style={styles.ampleInput}></TextInput>
+                    <Pressable>
+                        <Text style={styles.ampleLabel}>Allergies: </Text>
+                        <TextInput style={styles.ampleInput}></TextInput>
+                    </Pressable>
                 </View>
                 <View style={styles.ampleRow}>
-                    <Text style={styles.ampleLabel}>Medication: </Text>
-                    <TextInput style={styles.ampleInput}></TextInput>
+                    <Pressable>
+                        <Text style={styles.ampleLabel}>Medication: </Text>
+                        <TextInput style={styles.ampleInput}></TextInput>
+                    </Pressable>
                 </View>
                 <View style={styles.ampleRow}>
-                    <Text style={styles.ampleLabel}>Past Pertinent Medical History: </Text>
-                    <TextInput style={styles.ampleInput}></TextInput>
+                    <Pressable>
+                        <Text style={styles.ampleLabel}>Past Pertinent Medical History: </Text>
+                        <TextInput style={styles.ampleInput}></TextInput>
+                    </Pressable>
                 </View>
                 <View style={styles.ampleRow}>
-                    <Text style={styles.ampleLabel}>Last In: </Text>
-                    <TextInput style={styles.ampleInput}></TextInput>
+                    <Pressable>
+                        <Text style={styles.ampleLabel}>Last In: </Text>
+                        <TextInput style={styles.ampleInput}></TextInput>
+                    </Pressable>
                 </View>
                 <View style={styles.ampleRow}>
-                    <Text style={styles.ampleLabel}>Last Out: </Text>
-                    <TextInput style={styles.ampleInput}></TextInput>
+                    <Pressable>
+                        <Text style={styles.ampleLabel}>Last Out: </Text>
+                        <TextInput style={styles.ampleInput}></TextInput>
+                    </Pressable>
                 </View>
 
                 <Pressable
@@ -332,12 +344,12 @@ export default function Soap() {
 
     return(
         <NavigationContainer independent={true}>
-        <Stack.Navigator>
-            <Stack.Screen name='Subjective' component={Subjective} />
-            <Stack.Screen name='Vitals' component={Vitals} />
-            <Stack.Screen name='History' component={History} />
-            <Stack.Screen name='Exam' component={Exam} />
-        </Stack.Navigator>
+            <Drawer.Navigator>
+                <Drawer.Screen name='Subjective' component={Subjective} />
+                <Drawer.Screen name='Vitals' component={Vitals}/>
+                <Drawer.Screen name='History' component={History}/>
+                <Drawer.Screen name='Exam' component={Exam}/>
+            </Drawer.Navigator>
         </NavigationContainer>
     )
 }
