@@ -10,9 +10,12 @@ import PatientView from "./Patients";
 import BottomButtons from "./BottomButtons";
 
 import { ScreenOptions } from "../config/navigator";
+import { container } from "../config/styles";
+import Palette from "../config/styles";
 
 const Drawer = createDrawerNavigator()
 const Stack = createNativeStackNavigator()
+const Colors = Palette()
 
 export default function Home() {
     return (
@@ -39,17 +42,17 @@ function LaunchScreen({navigation}){
     }
   
     return (
-      <View style={styles.LaunchScreen}>
+      <View style={[Colors.container, styles.LaunchScreen]}>
         <Pressable
-          style={styles.button}
+          style={[Colors.button, styles.button]}
           onPress={()=>{
             navigation.navigate('patients')
           }}
           >
-          <Text style={styles.buttonLabel}>checkup</Text>
+          <Text style={[Colors.text, styles.buttonLabel]}>checkup</Text>
         </Pressable>
         <Pressable
-          style={Object.assign({}, styles.button, {backgroundColor: 'limegreen'})}
+          style={[Colors.button, styles.button, {backgroundColor: 'limegreen'}]}
           onPress={loadNewSoap}
           >
           <Text style={{fontSize: 22, fontWeight: 500}}>New Patient</Text>
@@ -60,25 +63,15 @@ function LaunchScreen({navigation}){
 
 const styles = StyleSheet.create({
     LaunchScreen: {
-        borderTopWidth: 4,
-        borderColor: '#1a1a1a',
-        backgroundColor: '#848884',
-        height: '100%',
         gap: '5%',
-        alignItems: 'center',
         paddingTop: '20%'
     },
     button: {
-        backgroundColor: '#1a1a1a',
         height: '15%',
         width: '55%',
-
         borderRadius: 9,
-        textAlign: 'center',
-        justifyContent: 'center',
     },
     buttonLabel: {
-        color: 'whitesmoke',
         fontSize: 24,
     }
 });
