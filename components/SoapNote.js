@@ -23,6 +23,9 @@ import { addPatient, updatePatient, storeVitalSnap } from '../features/patientsS
 
 import Timer from './Timer';
 
+import Palette from '../config/styles';
+
+const Colors = Palette()
 const Drawer = createDrawerNavigator()
 const Stack = createNativeStackNavigator();
 
@@ -344,7 +347,10 @@ export default function Soap() {
 
     return(
         <NavigationContainer independent={true}>
-            <Drawer.Navigator>
+            <Drawer.Navigator
+                initialRouteName='Subjective'
+                screenOptions={Colors.navigator}
+            >
                 <Drawer.Screen name='Subjective' component={Subjective} />
                 <Drawer.Screen name='Vitals' component={Vitals}/>
                 <Drawer.Screen name='History' component={History}/>

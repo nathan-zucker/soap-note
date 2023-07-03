@@ -22,7 +22,7 @@ export default function Home() {
         <View style={{width: '100%', height: '100%'}}>
             <Stack.Navigator
                 initialRouteName="welcome"
-                screenOptions={ScreenOptions}
+                screenOptions={Colors.navigator}
             >
                 <Stack.Screen name='welcome' component={LaunchScreen}  />
                 <Stack.Screen name='new patient' component={Soap}  />
@@ -64,7 +64,8 @@ function LaunchScreen({navigation}){
 const styles = StyleSheet.create({
     LaunchScreen: {
         gap: '5%',
-        paddingTop: '20%'
+        paddingTop: '20%',
+        alignItems: 'center',
     },
     button: {
         height: '15%',

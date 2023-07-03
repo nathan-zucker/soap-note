@@ -12,12 +12,17 @@ export default function Palette() {
 
 
     return {
+        navigator: {
+            headerTintColor: 'whitesmoke',
+            headerStyle: {
+                backgroundColor: '#1a1a1a',
+            }
+        },
         container: {
             backgroundColor: darkMode.background,
             color: 'whitesmoke',
             width: '100%',
             height: '100%',
-            alignItems: 'center',
         },
         text: {
             color: 'whitesmoke'

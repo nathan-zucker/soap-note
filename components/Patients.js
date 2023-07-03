@@ -19,8 +19,11 @@ import VitalsCheckup from "./VitalsCheckup";
 
 import { updatePatient } from "../features/patientsSlice";
 import { loadPatient, changeTimerType, newSoap } from "../features/soapSlice";
+import Palette from "../config/styles";
+import { ScreenOptions } from "../config/navigator";
 
 const PatientDrawer = createDrawerNavigator();
+const Colors = Palette()
 
 function Patient({navigation, data}) {
     const dispatch = useDispatch();
@@ -269,9 +272,9 @@ function HomeScreen() {
     const patientNames = patientsData.map((patient) => patient.name)
 
     return (
-        <View>
-            <Text>Here is a sub-menu of all the patients</Text>
-            <Text>Current Patient{patientNames.length > 1 ? 's' : null}: {patientNames.join(', ')}</Text>
+        <View style={Colors.container}>
+            <Text style={Colors.text}>Here is a sub-menu of all the patients</Text>
+            <Text style={Colors.text}>Current Patient{patientNames.length > 1 ? 's' : null}: {patientNames.join(', ')}</Text>
         </View>
     )
 }
@@ -282,7 +285,10 @@ export default function PatientView() {
     const patients = useSelector(state => state.patients)
 
     return(
-        <Drawer.Navigator >
+        <Drawer.Navigator
+            initialRouteName="Patient Overview"
+            screenOptions={Colors.navigator}
+        >
             <Drawer.Screen name='Patient Overview' component={HomeScreen} />
             {patients.map(patient => <Drawer.Screen name={patient.name} key={patient.name} children={()=><Patient data={patient}/>} />)}
         </Drawer.Navigator>
