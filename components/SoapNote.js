@@ -34,13 +34,32 @@ function Subjective({navigation}){
     const store = useSelector(state => state.soap)
     const [subjective, updateSubjective] = useState(store.subjective)
 
+    function buttonColors(hook) {
+        switch (subjective.sex) {
+            case 'none': return {
+                backgroundColor: '#3b3d3b',
+                borderColor: 'transparent',
+            }
+            case hook: return {
+                borderColor: 'limegreen',
+                backgroundColor: '#1a1a1a',
+            }
+            default: return {
+                backgroundColor: '#2a2b2a',
+            }
+        }
+    }
+    function inputColors(value ) {
+        
+    }
+
     return(
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-        <View style={styles.container}>
-            <Pressable>
-                <Text>Name: </Text>
+        <View style={[Colors.container, styles.container]}>
+            <Text style={Colors.text}>Name: </Text>
+            <Pressable style={{width: '70%'}}>
                 <TextInput
-                    style={styles.input}
+                    style={[Colors.textInput, styles.input]}
                     value={subjective.patientName}
                     onChangeText={(value)=>updateSubjective(Object.assign({}, subjective, {patientName: value}))}
                     autoCapitalize='words'
@@ -49,10 +68,10 @@ function Subjective({navigation}){
             
             <View style={{width: '100%', flexDirection: 'row', justifyContent: 'center', alignItems: 'center',}}>
                 <View style={{flexDirection: 'column', width: '20%'}}>
+                    <Text style={Colors.text}>Age: </Text>
                     <Pressable>
-                        <Text>Age: </Text>
                         <TextInput
-                            style={styles.input}
+                            style={[Colors.textInput, styles.input, {height: 58, fontSize: 30,}]}
                             onChangeText={(value)=>updateSubjective(Object.assign({}, subjective, {age: value}))}
                             value={subjective.age}
                             keyboardType='number-pad'
@@ -60,43 +79,22 @@ function Subjective({navigation}){
                     </Pressable>
                 </View>
                 <View style={{flexDirection: 'column'}}>
-                    <Text style={{textDecorationLine: 'underline', marginBottom: 3,}}>Sex: {subjective.sex}</Text>
+                    <Text style={[Colors.text, {textDecorationLine: 'underline', marginBottom: 3,}]}>Sex:</Text>
                     <View style={styles.sexOptions}>
                         <Pressable
-                            style={Object.assign({}, styles.sexButton, {
-                                borderColor: (()=>{
-                                    if (subjective.sex === 'M') {
-                                        return 'limegreen'
-                                    }
-                                    return 'transparent'
-                                })()
-                            })}
+                            style={[ styles.sexButton, buttonColors('M') ]}
                             onPress={()=>updateSubjective(Object.assign({}, subjective, {sex: 'M'}))}
                             >
                             <Ionicons name='male' size={36} color='#2986CC' />
                         </Pressable>
                         <Pressable
-                            style={Object.assign({}, styles.sexButton, {
-                                borderColor: (()=>{
-                                    if (subjective.sex === 'F') {
-                                        return 'limegreen'
-                                    }
-                                    return 'transparent'
-                                })()
-                            })}
+                            style={[ styles.sexButton, buttonColors('F') ]}
                             onPress={()=>updateSubjective(Object.assign({}, subjective, {sex: 'F'}))}
                         >
                             <Ionicons name='female' size={36} color='#C90076' />
                         </Pressable>
                         <Pressable
-                            style={Object.assign({}, styles.sexButton, {
-                                borderColor: (()=>{
-                                    if (subjective.sex === 'U') {
-                                        return 'limegreen'
-                                    }
-                                    return 'transparent'
-                                })()
-                            })}
+                            style={[ styles.sexButton, buttonColors('U') ]}
                             onPress={()=>updateSubjective(Object.assign({}, subjective, {sex: 'U'}))}
                             >
                             <Ionicons name='transgender' size={36} color='white' />
@@ -105,10 +103,10 @@ function Subjective({navigation}){
 
                 </View>
             </View>
-            <Pressable>
-                <Text>Chief Complaint:</Text>
+            <Text style={Colors.text}>Chief Complaint:</Text>
+            <Pressable style={{width: '70%'}}>
                 <TextInput
-                    style={styles.input}
+                    style={[Colors.textInput, styles.input]}
                     value={subjective.CC}
                     onChangeText={(value)=>updateSubjective(Object.assign( {}, subjective, {CC: value} ))}
                     />
@@ -277,8 +275,14 @@ function History({navigation}) {
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
             <View style={styles.ample}>
-                <Text>AMPLE History</Text>
+                <Text>SAMPLE History</Text>
 
+                <View style={styles.ampleRow}>
+                    <Pressable>
+                        <Text style={styles.ampleLabel}>Signs/Symptoms: </Text>
+                        <TextInput style={styles.ampleInput}></TextInput>
+                    </Pressable>
+                </View>
                 <View style={styles.ampleRow}>
                     <Pressable>
                         <Text style={styles.ampleLabel}>Allergies: </Text>
@@ -369,9 +373,10 @@ const styles = StyleSheet.create({
     input: {
         borderWidth: 2,
         borderRadius: 5,
-        width: '70%',
+        width: '100%',
         height: 50,
         fontSize: 22,
+        padding: 2,
     },
     number: {
         borderWidth: 2,
@@ -448,9 +453,10 @@ const styles = StyleSheet.create({
     sexOptions: {
         flexDirection: 'row',
         gap: 5,
+        marginHorizontal: 5,
     },
     sexButton: {
-        backgroundColor: '#1a1a1a',
+        backgroundColor: '#3b3d3b',
         padding: 5,
         borderRadius: 10,
         borderWidth: 3,
