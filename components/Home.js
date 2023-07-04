@@ -63,7 +63,6 @@ function LaunchScreen({navigation}){
 
 const styles = StyleSheet.create({
     LaunchScreen: {
-        gap: '5%',
         paddingTop: '20%',
         alignItems: 'center',
     },
@@ -71,6 +70,7 @@ const styles = StyleSheet.create({
         height: '15%',
         width: '55%',
         borderRadius: 9,
+        margin: '6%',
     },
     buttonLabel: {
         fontSize: 24,

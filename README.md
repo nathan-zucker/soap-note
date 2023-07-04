@@ -1,7 +1,8 @@
 ## scripts: 
 
 ### dev server
-for iOS/android: expo-cli start --tunnel
+for iOS: npx expo start --tunnel
+for web: npx expo start -w
 
 ## docs:
 

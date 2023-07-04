@@ -30,7 +30,7 @@ export class Patient {
             subjective: {
                 patientName: name || '',
                 age: age || '',
-                sex: sex || '',
+                sex: sex || 'none',
                 CC: ''
             },
             objective: {

@@ -30,7 +30,14 @@ export default function Palette() {
         button: {
             backgroundColor: '#3b3d3b',    
             textAlign: 'center',
+            alignItems: 'center',
             justifyContent: 'center',
+        },
+        textInput: {
+            backgroundColor: '#3b3d3b',
+            color: 'whitesmoke',
+            textAlign: 'left',
+            borderWidth: 3,
         }
     }
 }
