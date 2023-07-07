@@ -18,7 +18,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 
-import { storeSubjective, storeVitalsSnapshot, changeTimerType, toggleTimer } from '../features/soapSlice';
+import { storeSubjective, storeVitalsSnapshot, storeHistory, changeTimerType, toggleTimer } from '../features/soapSlice';
 import { addPatient, updatePatient, storeVitalSnap } from '../features/patientsSlice';
 
 import Timer from './Timer';
@@ -271,6 +271,29 @@ function Vitals({navigation}) {
 }
 
 function History({navigation}) {
+
+    const [symptoms, updateSymptoms] = useState('')
+    const [allergies, updateAllergies] = useState('')
+    const [medications, updateMedications] = useState('')
+    const [PPMH, updatePPMH] = useState('')
+    const [lastOral, updateLastOral] = useState('')
+    const [events, updateEvents] = useState('')
+
+    const dispatch = useDispatch()
+
+    function submit () {
+        const sample = {
+            symptoms: symptoms,
+            allergies: allergies,
+            medications: medications,
+            PPMH: PPMH,
+            lastOral: lastOral,
+            events: events,
+        }
+        console.log(sample)
+        dispatch(storeHistory(sample))
+    }
+
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false} style={Colors.container}>
             <View style={[Colors.container, styles.ample]}>
@@ -279,43 +302,44 @@ function History({navigation}) {
                 <View style={styles.ampleRow}>
                     <Pressable>
                         <Text style={styles.ampleLabel}>Signs/Symptoms: </Text>
-                        <TextInput style={styles.ampleInput}></TextInput>
+                        <TextInput style={styles.ampleInput} value={symptoms} onChangeText={(e)=>updateSymptoms(e)} />
                     </Pressable>
                 </View>
                 <View style={styles.ampleRow}>
                     <Pressable>
                         <Text style={styles.ampleLabel}>Allergies: </Text>
-                        <TextInput style={styles.ampleInput}></TextInput>
+                        <TextInput style={styles.ampleInput} value={allergies} onChangeText={(e)=>updateAllergies(e)} />
                     </Pressable>
                 </View>
                 <View style={styles.ampleRow}>
                     <Pressable>
                         <Text style={styles.ampleLabel}>Medication: </Text>
-                        <TextInput style={styles.ampleInput}></TextInput>
+                        <TextInput style={styles.ampleInput} value={medications} onChangeText={(e)=>updateMedications(e)} />
                     </Pressable>
                 </View>
                 <View style={styles.ampleRow}>
                     <Pressable>
                         <Text style={styles.ampleLabel}>Past Pertinent Medical History: </Text>
-                        <TextInput style={styles.ampleInput}></TextInput>
+                        <TextInput style={styles.ampleInput} value={PPMH} onChangeText={(e)=>updatePPMH(e)} />
                     </Pressable>
                 </View>
                 <View style={styles.ampleRow}>
                     <Pressable>
                         <Text style={styles.ampleLabel}>Last Oral Intake: </Text>
-                        <TextInput style={styles.ampleInput}></TextInput>
+                        <TextInput style={styles.ampleInput} value={lastOral} onChangeText={(e)=>updateLastOral(lastOral)} />
                     </Pressable>
                 </View>
                 <View style={styles.ampleRow}>
                     <Pressable>
                         <Text style={styles.ampleLabel}>Events Leading to Condition:</Text>
-                        <TextInput style={styles.ampleInput}></TextInput>
+                        <TextInput style={styles.ampleInput} value={events} onChangeText={(e)=>updateEvents(e)} />
                     </Pressable>
                 </View>
 
                 <Pressable
                         style={styles.button}
                         onPress={()=>{
+                            submit()
                             navigation.navigate("Exam")
                         }}
                         >

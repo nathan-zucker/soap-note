@@ -36,14 +36,17 @@ export const soapSlice = createSlice({
             })
         },
         storeVitalsSnapshot: (state, action) =>  {
-            let newVitals = [...state.objective.vitals]
+            let newVitals = [...state.vitals]
             let factor = state.timer.factor
             newVitals.push(new VitalSnap(action.payload.LOC, action.payload.HR * factor, action.payload.RR * factor, action.payload.skin))
             //console.log("vitals updated --->", newVitals)
             return Object.assign({}, state, {
-                objective: Object.assign({}, state.objective, {
-                    vitals: newVitals,
-                })
+                vitals: newVitals
+            })
+        },
+        storeHistory: (state, action) => {
+            return Object.assign({}, state, {
+                history: action.payload
             })
         },
         loadPatient: (state, action) => {
@@ -56,5 +59,5 @@ export const soapSlice = createSlice({
     }
 })
 
-export const {storeSubjective, storeVitalsSnapshot, changeTimerType, startStopState, loadPatient, newSoap} = soapSlice.actions
+export const {storeSubjective, storeVitalsSnapshot, changeTimerType, startStopState, storeHistory, loadPatient, newSoap} = soapSlice.actions
 export default soapSlice.reducer

@@ -33,11 +33,14 @@ export class Patient {
                 sex: sex || 'none',
                 CC: ''
             },
-            objective: {
-                vitals: [],
+            vitals: [],
+            history: {
+                symptoms: '',
                 allergies: '',
-                medication: '',
+                medications: '',
                 PPMH: '',
+                lastOral: '',
+                events: '',
             },
             exam: {
                 image: '',
@@ -51,49 +54,45 @@ export class Patient {
 }
 
 const johnDoe = () => {
-    let JD = Object.assign({}, new Patient('JDid', 'John Doe', '35', 'M'), {
-        objective: {
-            vitals: [
-                {
-                    time: 1685669772366,
-                    LOC: 'AxO2',
-                    HR: '105',
-                    RR: '25',
-                    skin: 'PCC',
-                },
-                {
-                    time: 1685670072366,
-                    LOC: 'AxO2',
-                    HR: '102',
-                    RR: '24',
-                    skin: 'PCC',
-                },
-                {
-                    time: 1685670372366,
-                    LOC: 'AxO3',
-                    HR: '90',
-                    RR: '22',
-                    skin: 'PCC',
-                },
-                {
-                    time: 1685670672366,
-                    LOC: 'AxO3',
-                    HR: '95',
-                    RR: '20',
-                    skin: 'norm',
-                },
-                {
-                    time: 1685670972366,
-                    LOC: 'AxO3',
-                    HR: '100',
-                    RR: '20',
-                    skin: 'norm',
-                },
-            ],
-            allergies: '',
-            medication: '',
-            PPMH: '',
-        }
+    let JD = Object.assign({}, new Patient('JDid', 'John Doe', '35', 'M'), 
+    {
+        vitals: [
+            {
+                time: 1685669772366,
+                LOC: 'AxO2',
+                HR: '105',
+                RR: '25',
+                skin: 'PCC',
+            },
+            {
+                time: 1685670072366,
+                LOC: 'AxO2',
+                HR: '102',
+                RR: '24',
+                skin: 'PCC',
+            },
+            {
+                time: 1685670372366,
+                LOC: 'AxO3',
+                HR: '90',
+                RR: '22',
+                skin: 'PCC',
+            },
+            {
+                time: 1685670672366,
+                LOC: 'AxO3',
+                HR: '95',
+                RR: '20',
+                skin: 'norm',
+            },
+            {
+                time: 1685670972366,
+                LOC: 'AxO3',
+                HR: '100',
+                RR: '20',
+                skin: 'norm',
+            },
+        ]
     })
     return JD
 }
@@ -111,8 +110,8 @@ export const patientsSlice = createSlice({
                 subjective: action.payload
             })
             
+            //CHECK FOR EXISTING PATIENT IN DATABASE
             let existingPatient = state.find(patient => patient.name === action.payload.patientName)
-            
             if (existingPatient !== undefined) {
                 console.log(`updating ${existingPatient.name}...`)
                 let index = state.indexOf(existingPatient)
@@ -122,10 +121,10 @@ export const patientsSlice = createSlice({
                 return [...(state.slice(0, index)), updatedPatient, ...(state.slice(index+1))]
             }
 
+            // JOHN / JANE DOE
             if (action.payload.patientName === '') {
                 let numberOfJohns = 0;
                 let numberOfJanes = 0;
-
                 for (let i=0; i<state.length; i++) {
                     if (state[i].name.match(/(John Doe)/)) {
                         numberOfJohns++
@@ -134,7 +133,6 @@ export const patientsSlice = createSlice({
                         numberOfJanes++
                     }
                 }
-
                 switch (action.payload.sex) {
                     case 'F': 
                         newPatient = Object.assign({}, newPatient, {
@@ -157,6 +155,8 @@ export const patientsSlice = createSlice({
                     default: return [...state, newPatient]
                 }
             }
+            // ELSE ADD NEW PATIENT TO THE LIST
+            console.log([...state, newPatient])
             return [...state, newPatient]
         },
         updatePatient: (state, action) => {
