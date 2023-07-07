@@ -176,31 +176,33 @@ function Vitals({navigation}) {
         console.log('SOAP ---> ', soap.name)
         
         dispatch(storeVitalsSnapshot(vitalSnap))
+        /*
+        LIVE UPDATE THE PATIENT VIEW
         dispatch(updatePatient({
             name: soap.name || patients[patients.length - 1].name,
             type: 'vitals',
             data: vitalSnap,
         }))
+        */
         navigation.navigate("History")
     }
 
     return (
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-            <View style={styles.vitalsGrid}>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false} style={Colors.container}>
+            <View style={Colors.container}>
                 <View style={styles.vitalsRow}>
                     <View style={Object.assign({}, styles.vitalsBox, {
                             width: '100%',
                         })}
                     >
-                        <Text style={styles.vitalsLabel}>Level of Consciousness</Text>
+                        <Text style={[Colors.text, styles.vitalsLabel]}>Level of Consciousness</Text>
                         <TextInput
-                            style={Object.assign({}, styles.input, {width: 120})}
+                            style={[Colors.textInput, styles.input, {width: 120}]}
                             onChangeText={(value)=>setVitalSnap(Object.assign({}, vitalSnap, {LOC: value}))}
-                            placeholder='AxO 3'
                             />
                     </View>
                 </View>
-                <View style={{backgroundColor: '#ddd', width: '100%', alignItems: 'center', paddingTop: 10, borderRadius: 7}}>
+                <View style={{width: '100%', alignItems: 'center'}}>
                     <Switch
                         value={timerToggle}
                         onValueChange={()=>{
@@ -211,18 +213,15 @@ function Vitals({navigation}) {
                         trackColor={{true: 'gray'}}
                     />
                 </View>
-                <View style={Object.assign({}, styles.vitalsRow, {
-                    backgroundColor: '#ddd',
+                <View style={[styles.vitalsRow, {
                     paddingHorizontal: 12,
                     paddingBottom: 6,
-                    alignItems: 'flex-end',
-                })}>
-                    <View style={Object.assign({}, styles.vitalsBox, {
-                        borderColor: 'blue',
-                    })}>
-                        <Text style={styles.vitalsLabel}>Heart Rate</Text>
+                    alignItems: 'center',
+                }]}>
+                    <View style={styles.vitalsBox}>
+                        <Text style={[Colors.text, styles.vitalsLabel]}>Heart Rate</Text>
                         <TextInput
-                            style={styles.number}
+                            style={[Colors.textInput, styles.number]}
                             onChangeText={(value)=>setVitalSnap(Object.assign({}, vitalSnap, {HR: value}))}
                             keyboardType='number-pad'
                         />
@@ -232,9 +231,9 @@ function Vitals({navigation}) {
                         <Timer timerType={timerType} />
                     </View>
                     <View style={styles.vitalsBox}>
-                        <Text style={styles.vitalsLabel}>Respiratory Rate</Text>
+                        <Text style={[Colors.text, styles.vitalsLabel]}>Respiratory Rate</Text>
                         <TextInput
-                            style={styles.number}
+                            style={[Colors.textInput, styles.number]}
                             onChangeText={(value)=>setVitalSnap(Object.assign({}, vitalSnap, {RR: value}))}
                             keyboardType='number-pad'
                             />
@@ -245,9 +244,9 @@ function Vitals({navigation}) {
                     <View style={Object.assign({}, styles.vitalsBox, {
                         width: '100%',
                     })}>
-                        <Text style={styles.vitalsLabel}>Skin Color, Temperature, Moisture</Text>
+                        <Text style={[Colors.text, styles.vitalsLabel]}>Skin Color, Temperature, Moisture</Text>
                         <TextInput
-                            style={styles.input}
+                            style={[Colors.textInput, styles.input]}
                             onChangeText={(value)=>setVitalSnap(Object.assign({}, vitalSnap, {skin: value}))}
                             />
                     </View>
@@ -273,9 +272,9 @@ function Vitals({navigation}) {
 
 function History({navigation}) {
     return (
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-            <View style={styles.ample}>
-                <Text>SAMPLE History</Text>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false} style={Colors.container}>
+            <View style={[Colors.container, styles.ample]}>
+                <Text style={Colors.text}>SAMPLE History</Text>
 
                 <View style={styles.ampleRow}>
                     <Pressable>
@@ -303,13 +302,13 @@ function History({navigation}) {
                 </View>
                 <View style={styles.ampleRow}>
                     <Pressable>
-                        <Text style={styles.ampleLabel}>Last In: </Text>
+                        <Text style={styles.ampleLabel}>Last Oral Intake: </Text>
                         <TextInput style={styles.ampleInput}></TextInput>
                     </Pressable>
                 </View>
                 <View style={styles.ampleRow}>
                     <Pressable>
-                        <Text style={styles.ampleLabel}>Last Out: </Text>
+                        <Text style={styles.ampleLabel}>Events Leading to Condition:</Text>
                         <TextInput style={styles.ampleInput}></TextInput>
                     </Pressable>
                 </View>
@@ -432,21 +431,18 @@ const styles = StyleSheet.create({
         textDecorationLine: 'underline',
         width: '80%',
         marginLeft: '10%',
+        color: Colors.text.color,
     },
     ampleInput: {
         height: '60%',
         width: '90%',
         marginLeft: '5%',
         padding: 3,
-        borderWidth: 3,
-        borderColor: 'transparent',
-        borderBottomColor: 'black',
-        borderLeftColor: 'black',
-        borderRightColor: 'black',
+        backgroundColor: Colors.textInput.backgroundColor,
+        color: Colors.textInput.color,
     },
     timer: {
         width: '20%',
-        backgroundColor: '#ddd',
         paddingTop: 8,
         borderRadius: 7,
     },

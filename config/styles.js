@@ -9,8 +9,6 @@ export const container = {
 
 export default function Palette() {
 
-
-
     return {
         navigator: {
             headerTintColor: 'whitesmoke',

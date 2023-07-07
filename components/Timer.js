@@ -4,6 +4,10 @@ import { useEffect } from "react"
 import { startStopState } from "../features/soapSlice"
 import { useDispatch } from "react-redux"
 
+import Palette from "../config/styles"
+
+const Colors = Palette()
+
 export default function Timer (props) {
     const dispatch = useDispatch()
 
@@ -61,7 +65,7 @@ export default function Timer (props) {
         <View style={{
             alignItems: 'center',
         }}>
-            <Text style={{textAlign: 'center', fontSize: 30}}>{timeDisplay}</Text>
+            <Text style={[Colors.text, {textAlign: 'center', fontSize: 30}]}>{timeDisplay}</Text>
             <Button
                 title='start'
                 onPress={()=>{
