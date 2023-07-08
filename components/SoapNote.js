@@ -8,6 +8,7 @@ import {
     TouchableWithoutFeedback,
     Button,
     Switch,
+    Image,
 } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
@@ -20,8 +21,10 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 
 import { storeSubjective, storeVitalsSnapshot, storeHistory, changeTimerType, toggleTimer } from '../features/soapSlice';
 import { addPatient, updatePatient, storeVitalSnap } from '../features/patientsSlice';
+import { cameraOn, cameraOff, savePhoto } from '../features/cameraSlice';
 
 import Timer from './Timer';
+import ExamCamera from './ExamCamera';
 
 import Palette from '../config/styles';
 
@@ -290,8 +293,18 @@ function History({navigation}) {
             lastOral: lastOral,
             events: events,
         }
-        console.log(sample)
         dispatch(storeHistory(sample))
+    }
+
+    function testJane() {
+        dispatch(storeHistory({
+            symptoms: 'L ankle pain, swelling, bruising',
+            allergies: 'none',
+            medications: 'none',
+            PPMH: 'none',
+            lastOral: 'last night snacks',
+            events: 'fell and got foot jammed in crevasse, hyperextending the ankle.'
+        }))
     }
 
     return (
@@ -345,23 +358,87 @@ function History({navigation}) {
                         >
                         <Text>NEXT</Text>
                 </Pressable>
+                <Button title='test' onPress={()=>{
+                    testJane()
+                    navigation.navigate('Exam')
+                }} />
             </View>
         </TouchableWithoutFeedback>
     )
 }
 
 function Exam({navigation}) {
+    const dispatch = useDispatch()
+
+    const [cameraOpen, toggleCameraOpen] = useState(false)
+    const cameraActive = useSelector(state => state.camera.active)
+    const photos = useSelector(state => state.camera.photos)
+
+    const [examDescription, setExamDescription] = useState('')
+
+    function Thumbnails ({photos}) {
+        
+        return photos.map((photo, i) => {
+            return (
+                <Pressable key={i} style={styles.thumbnail}>
+                    <Image
+                        source={require('../assets/favicon.png')}
+                        height={styles.thumbnail.height}
+                        width={styles.thumbnail.height}
+                    />
+                </Pressable>
+            )
+        })
+    }
+
+    function PhotoGallery () {
+        return (
+            <View>
+                <Text style={[Colors.text, {textAlign: 'center', margin: 10, fontSize: 16, textDecorationLine: 'underline',}]}>Photos:</Text>
+                <View style={{flexDirection: 'row', justifyContent: 'center',}}>
+                    <Thumbnails photos={photos} />
+                    <Pressable
+                        style={[Colors.button, styles.thumbnail]}
+                        onPress={()=>dispatch(cameraOn())}
+                    >
+                        <Ionicons name='add-circle-outline' style={[Colors.text, {fontSize: 50, marginLeft: 3.5, marginTop: 0,}]} />
+                    </Pressable>
+                </View>
+            </View>
+        )
+    }
+
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-            <View>
-                <Text>Exam</Text>
+            <View style={Colors.container}>
+
+                {cameraActive ? <ExamCamera/> : <PhotoGallery/> }
+                
+                <View>
+                    <Text style={[Colors.text, {marginLeft: '10%'}]}>Description:</Text>
+                    <TextInput
+                        style={[
+                            Colors.textInput,
+                            {
+                                minHeight: 80,
+                                width: '90%',
+                                marginHorizontal: '5%',
+                                padding: 4,
+                            }
+                        ]}
+                        multiline
+                        numberOfLines={4}
+                        onChangeText={(e)=>{setExamDescription(e)}}
+                    />
+                </View>
+
                 <Pressable
-                        style={styles.button}
-                        onPress={()=>{
-                            navigation.navigate("History")
-                        }}
-                        >
-                        <Text>NEXT</Text>
+                    style={[styles.button, {alignSelf: 'center'}]}
+                    onPress={()=>{
+                        navigation.navigate("History")
+                    }}
+                >
+                    <Text>NEXT</Text>
                 </Pressable>
             </View>
         </TouchableWithoutFeedback>
@@ -481,5 +558,10 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         borderWidth: 3,
         borderColor: 'transparent',
-    }
+    },
+    thumbnail: {
+        width: 70,
+        height: 70,
+        borderRadius: 5,
+    },
 })

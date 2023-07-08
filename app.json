@@ -1,5 +1,13 @@
 {
   "expo": {
+    "plugins": [
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow $(PRODUCT_NFAME) to access your camera."
+        }
+      ]
+    ],
     "name": "soap-note",
     "slug": "soap-note",
     "version": "1.0.0",
