@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import { StyleSheet, Text, View, Button, Pressable } from "react-native";
+import { StyleSheet, Text, View, Button, Pressable, Image } from "react-native";
 import {Camera, CameraType} from 'expo-camera';
 
 import { cameraOff, savePhoto } from "../features/cameraSlice";
@@ -11,8 +11,9 @@ export default function ExamCamera () {
     const dispatch = useDispatch()
     const [type, setType] = useState(CameraType.back)
     const [flashOn, setFlashOn] = useState(false)
-    const [flash, setFlash] = useState(Camera.Constants.FlashMode.off);
+    const [flash, setFlash] = useState(Camera.Constants.FlashMode.off)
     const [flashIcon, setFlashIcon] = useState('flash-off-outline')
+    const [preview, setPreview] = useState()
     
     const [permission, requestPermission] = Camera.useCameraPermissions()
 
@@ -44,43 +45,62 @@ export default function ExamCamera () {
         else {
             setFlash(Camera.Constants.FlashMode.on)
             setFlashIcon('flash-outline')
-        }
+        } 
         setFlashOn(flashOn=>!flashOn)
+    }
+    let takePicture = async() => {
+        if (cameraRef) {
+            try {
+                const data = await cameraRef.current.takePictureAsync()
+                console.log(data)
+                setPreview(data.uri)
+            } catch(e) {
+                console.error(e)
+            }
+        }
     }
 
     return (
-        <Camera
-            style={styles.container}
-            type={type}
-            ref={cameraRef}
-            flashMode={flash}
-        >
-            <View style={styles.buttonRow}>
-                <Pressable style={styles.button} onPress={()=>{toggleFlash()}}>
-                    <Ionicons name={flashIcon} style={styles.icon} />
-                </Pressable>
+        <View style={styles.container}>
+        {preview ? 
+            <View style={styles.container}>
+                <Image souce={{uri: preview}} style={styles.container} />
+            </View>
+        :
+            <Camera
+                style={styles.container}
+                type={type}
+                ref={cameraRef}
+                flashMode={flash}
+            >
+                <View style={styles.buttonRow}>
+                    <Pressable style={styles.button} onPress={()=>{toggleFlash()}}>
+                        <Ionicons name={flashIcon} style={styles.icon} />
+                    </Pressable>
+                    
+                    <Pressable style={styles.button} onPress={()=>{dispatch(cameraOff())}}>
+                        <Ionicons name='close-circle-outline' style={styles.icon} />
+                    </Pressable>
+                </View>
                 
-                <Pressable style={styles.button} onPress={()=>{dispatch(cameraOff())}}>
-                    <Ionicons name='close-circle-outline' style={styles.icon} />
-                </Pressable>
-            </View>
-            
-            <View style={styles.bottomRow}>
-                <Pressable style={styles.shutter}>
-                    <Ionicons name='radio-button-on-sharp' style={[styles.icon, {
-                        fontSize: 70,
-                    }]} />
-                </Pressable>
-            
-                <Pressable style={[styles.button, {
-                    position: 'absolute',
-                    left: '60%',
-                    top: 25,
-                }]} onPress={()=>toggleCameraType()}>
-                    <Ionicons name='sync-outline' style={styles.icon} />
-                </Pressable>
-            </View>
-        </Camera>
+                <View style={styles.bottomRow}>
+                    <Pressable style={styles.shutter} onPress={takePicture}>
+                        <Ionicons name='radio-button-on-sharp' style={[styles.icon, {
+                            fontSize: 70,
+                        }]} />
+                    </Pressable>
+                
+                    <Pressable style={[styles.button, {
+                        position: 'absolute',
+                        left: '60%',
+                        top: 25,
+                    }]} onPress={()=>toggleCameraType()}>
+                        <Ionicons name='sync-outline' style={styles.icon} />
+                    </Pressable>
+                </View>
+            </Camera>
+        }
+        </View>
     )
 }
 
