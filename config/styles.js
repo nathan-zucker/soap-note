@@ -7,7 +7,7 @@ export const container = {
     height: '100%',
 }
 
-export default function Palette() {
+export default function usePalette() {
 
     return {
         navigator: {

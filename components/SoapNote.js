@@ -26,9 +26,9 @@ import { cameraOn, cameraOff, savePhoto } from '../features/cameraSlice';
 import Timer from './Timer';
 import ExamCamera from './ExamCamera';
 
-import Palette from '../config/styles';
+import usePalette from '../config/styles';
 
-const Colors = Palette()
+const Colors = usePalette()
 const Drawer = createDrawerNavigator()
 const Stack = createNativeStackNavigator();
 

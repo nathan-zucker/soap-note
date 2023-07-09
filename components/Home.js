@@ -11,11 +11,11 @@ import BottomButtons from "./BottomButtons";
 
 import { ScreenOptions } from "../config/navigator";
 import { container } from "../config/styles";
-import Palette from "../config/styles";
+import usePalette from "../config/styles";
 
 const Drawer = createDrawerNavigator()
 const Stack = createNativeStackNavigator()
-const Colors = Palette()
+const Colors = usePalette()
 
 export default function Home() {
     return (

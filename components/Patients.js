@@ -19,11 +19,11 @@ import VitalsCheckup from "./VitalsCheckup";
 
 import { updatePatient } from "../features/patientsSlice";
 import { loadPatient, changeTimerType, newSoap } from "../features/soapSlice";
-import Palette from "../config/styles";
+import usePalette from "../config/styles";
 import { ScreenOptions } from "../config/navigator";
 
 const PatientDrawer = createDrawerNavigator();
-const Colors = Palette()
+const Colors = usePalette()
 
 function Patient({navigation, data}) {
     const dispatch = useDispatch();

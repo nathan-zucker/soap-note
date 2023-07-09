@@ -4,9 +4,9 @@ import { useEffect } from "react"
 import { startStopState } from "../features/soapSlice"
 import { useDispatch } from "react-redux"
 
-import Palette from "../config/styles"
+import usePalette from "../config/styles"
 
-const Colors = Palette()
+const Colors = usePalette()
 
 export default function Timer (props) {
     const dispatch = useDispatch()
@@ -18,7 +18,6 @@ export default function Timer (props) {
     const [timerActive, setTimerActive] = useState(false)
 
     const toggleSwitch = () => toggleTimer((prevState) => !prevState)
-
     useEffect(()=>{
         if (timerType === 30) {
             setTimerLength(30)
