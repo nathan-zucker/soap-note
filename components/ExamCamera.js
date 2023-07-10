@@ -1,6 +1,8 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { StyleSheet, Text, View, Button, Pressable, Image } from "react-native";
+
 import {Camera, CameraType} from 'expo-camera';
+import * as MediaLibrary from 'expo-media-library';
 
 import { cameraOff, savePhoto } from "../features/cameraSlice";
 
@@ -15,25 +17,19 @@ export default function ExamCamera () {
     const [flashIcon, setFlashIcon] = useState('flash-off-outline')
     const [preview, setPreview] = useState()
     
-    const [permission, requestPermission] = Camera.useCameraPermissions()
+    const [hasCameraPermission, setHasCameraPermission] = useState()
+    const [hasmediaPermission, setHasMediaPermission] = useState()
 
     const cameraRef = useRef()
 
-    if (!permission) {
-        return (
-            <View>
-                <Text>permissions loading...</Text>
-            </View>
-        )
-    }
-    if (!permission.granted) {
-        return (
-            <View>
-                <Text>enable camera?</Text>
-                <Button onPress={requestPermission} title='grant permission.' />
-            </View>
-        )
-    }
+    useEffect(() => {
+        (async () => {
+            MediaLibrary.requestPermissionsAsync();
+            const cameraStatus = await Camera.requestCameraPermissionsAsync();
+            setHasCameraPermission(cameraStatus.status === 'granted');
+        })()
+    }, [])
+
     function toggleCameraType() {
         setType(current => (current === CameraType.back ? CameraType.front : CameraType.back))
     }
@@ -61,14 +57,28 @@ export default function ExamCamera () {
     }
 
     return (
-        <View style={styles.container}>
+        <View>
         {preview ? 
-            <View style={styles.container}>
-                <Image souce={{uri: preview}} style={styles.container} />
+            <View>
+                <Image source={{uri: preview}} style={styles.imagePreview} />
+                <View style={styles.imageOptions}>
+                    <View style={styles.imageOption}>
+                        <Ionicons style={styles.imageButton} name='close-circle-outline' />
+                        <Text style={styles.imageButtonLabel}>retake</Text>
+                    </View>
+                    <View style={styles.imageOption}>
+                        <Ionicons style={styles.imageButton} name='checkmark-circle-outline' />
+                        <Text style={styles.imageButtonLabel}>save</Text>
+                    </View>
+                    <View style={styles.imageOption}>
+                        <Ionicons style={styles.imageButton} name='clipboard-outline' />
+                        <Text style={styles.imageButtonLabel}>notes</Text>
+                    </View>
+                </View>
             </View>
         :
             <Camera
-                style={styles.container}
+                style={[styles.container, styles.camera]}
                 type={type}
                 ref={cameraRef}
                 flashMode={flash}
@@ -110,6 +120,10 @@ const styles = StyleSheet.create({
         width: '100%',
         justifyContent: 'space-between',
     },
+    camera: {
+        height: '100%',
+        width: '100%',
+    },
     buttonRow: {
         height: 34,
         padding: 2,
@@ -133,5 +147,33 @@ const styles = StyleSheet.create({
         backgroundColor: '#1a1a1a70',
         flexDirection: 'row',
         justifyContent: 'center',
+    },
+    imagePreview: {
+        width: '100%',
+        height: '90%',
+    },
+    imageOptions: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        gap: 50,
+        marginTop: 5,
+    },
+    imageOption: {
+        borderRadius: 5,
+        borderColor: 'whitesmoke',
+        borderWidth: 2,
+        backgroundColor: '#2b2d2b',
+        paddingHorizontal: 4,
+    },
+    imageButton: {
+        color: 'whitesmoke',
+        fontSize: 36,
+        textAlign: 'center',
+        marginLeft: 1,
+    },
+    imageButtonLabel: {
+        color: 'whitesmoke',
+        fontSize: 14,
+        textAlign: 'center',
     }
 })

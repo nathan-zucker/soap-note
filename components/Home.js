@@ -9,8 +9,6 @@ import Soap from "./SoapNote";
 import PatientView from "./Patients";
 import BottomButtons from "./BottomButtons";
 
-import { ScreenOptions } from "../config/navigator";
-import { container } from "../config/styles";
 import usePalette from "../config/styles";
 
 const Drawer = createDrawerNavigator()
@@ -28,7 +26,10 @@ export default function Home() {
                 <Stack.Screen name='new patient' component={Soap}  />
                 <Stack.Screen name='patients' component={PatientView} />
             </Stack.Navigator>
+            {/**
             <BottomButtons />
+             * 
+             */}
         </View>
     )
 }
@@ -48,13 +49,13 @@ function LaunchScreen({navigation}){
           onPress={()=>{
             navigation.navigate('patients')
           }}
-          >
+        >
           <Text style={[Colors.text, styles.buttonLabel]}>checkup</Text>
         </Pressable>
         <Pressable
           style={[Colors.button, styles.button, {backgroundColor: 'limegreen'}]}
           onPress={loadNewSoap}
-          >
+        >
           <Text style={{fontSize: 22, fontWeight: 500}}>New Patient</Text>
         </Pressable>
       </View>
