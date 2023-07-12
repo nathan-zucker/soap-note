@@ -4,8 +4,6 @@ import { VitalSnap } from "./patientsSlice";
 
 import { Patient } from "./patientsSlice";
 
-
-
 export const soapSlice = createSlice({
     name: 'soap',
     initialState: new Patient(),

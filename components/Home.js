@@ -36,7 +36,6 @@ export default function Home() {
 
 function LaunchScreen({navigation}){
     const dispatch = useDispatch()
-    
     function loadNewSoap() {
       navigation.navigate('new patient')
       dispatch(newSoap())

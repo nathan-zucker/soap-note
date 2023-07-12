@@ -15,7 +15,9 @@ export class VitalSnap {
                 time: time,
                 LOC: loc,
                 HR: hr,
+                HRQ: '',
                 RR: rr,
+                RRQ: '',
                 skin: skin
             }
         )

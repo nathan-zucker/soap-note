@@ -156,7 +156,9 @@ function Vitals({navigation}) {
     const [vitalSnap, setVitalSnap] = useState({
         LOC: '',
         HR: '',
+        pulseQuality: '',
         RR: '',
+        respirationQuality: '',
         skin: '',
     })
     const [timerToggle, toggleTimer] = useState(false)
@@ -192,83 +194,112 @@ function Vitals({navigation}) {
 
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false} style={Colors.container}>
-            <View style={Colors.container}>
-                <View style={styles.vitalsRow}>
-                    <View style={Object.assign({}, styles.vitalsBox, {
-                            width: '100%',
-                        })}
-                    >
-                        <Text style={[Colors.text, styles.vitalsLabel]}>Level of Consciousness</Text>
+            <View style={styles.container}>
+
+                <View style={styles.vitalsChart}>
+                    
+                    <View style={styles.vitalsRow}>
+                        <Text style={[Colors.text, styles.vitalsLabel, {flex: 1}]}>Level of Consciousness</Text>
                         <TextInput
-                            style={[Colors.textInput, styles.input, {width: 120}]}
+                            style={[Colors.textInput, styles.input, {flex: 1}]}
                             onChangeText={(value)=>setVitalSnap(Object.assign({}, vitalSnap, {LOC: value}))}
-                            />
-                    </View>
-                </View>
-                <View style={{width: '100%', alignItems: 'center'}}>
-                    <Switch
-                        value={timerToggle}
-                        onValueChange={()=>{
-                            toggleTimer(prevState => !prevState)
-                            switchTimer()
-                        }}
-                        disabled={timerActive}
-                        trackColor={{true: 'gray'}}
-                    />
-                </View>
-                <View style={[styles.vitalsRow, {
-                    paddingHorizontal: 12,
-                    paddingBottom: 6,
-                    alignItems: 'center',
-                }]}>
-                    <View style={styles.vitalsBox}>
-                        <Text style={[Colors.text, styles.vitalsLabel]}>Heart Rate</Text>
-                        <TextInput
-                            style={[Colors.textInput, styles.number]}
-                            onChangeText={(value)=>setVitalSnap(Object.assign({}, vitalSnap, {HR: value}))}
-                            keyboardType='number-pad'
                         />
-                        <Text style={{fontSize: 10, color: '#922'}}>per <Text style={{fontWeight: 600, color: 'orangered'}}>{timerType}</Text> seconds</Text>
                     </View>
-                    <View style={styles.timer}>
-                        <Timer timerType={timerType} />
+
+                    <View style={styles.vitalsRow}>
+                        <View style={{width: '100%', flexDirection: 'row',}}>
+                            
+                            <View style={{flexDirection: 'row', flex: 2, justifyContent: 'flex-end', gap: 5, marginRight: 5,}}>
+                                <View style={{flexDirection: 'column', alignItems: 'start',}}>
+                                    <Text style={[Colors.text, styles.vitalsLabel]}>Heart Rate</Text>
+                                    <Text style={[styles.vitalsLabel, {fontSize: 10, color: '#922'}]}>per <Text style={{fontWeight: 600, color: 'orangered'}}>{timerType}</Text> seconds</Text>
+                                </View>
+                                <TextInput
+                                    style={[Colors.textInput, styles.number]}
+                                    onChangeText={(value)=>setVitalSnap(Object.assign({}, vitalSnap, {HR: value}))}
+                                    keyboardType='number-pad'
+                                />
+                            </View>
+                            
+                            <View style={{flex: 3}}>
+                                <Text style={[Colors.text, {flex: 1}]}>Quality</Text>
+                                <TextInput
+                                    style={[Colors.textInput, {flex: 1}]}
+                                    onChangeText={(e) => setVitalSnap(Object.assign({}, vitalSnap, {HRQ: e}))}
+                                />
+                            </View>
+
+                        </View>
                     </View>
-                    <View style={styles.vitalsBox}>
-                        <Text style={[Colors.text, styles.vitalsLabel]}>Respiratory Rate</Text>
-                        <TextInput
-                            style={[Colors.textInput, styles.number]}
-                            onChangeText={(value)=>setVitalSnap(Object.assign({}, vitalSnap, {RR: value}))}
-                            keyboardType='number-pad'
-                            />
-                        <Text style={{fontSize: 10, color: '#922'}}>per <Text style={{fontWeight: 600, color: 'orangered'}}>{timerType}</Text> seconds</Text>
+                    
+                    <View style={styles.vitalsRow}>
+                        <View style={{width: '100%', flexDirection: 'row',}}>
+                            
+                            <View style={{flexDirection: 'row', flex: 2, justifyContent: 'flex-end', gap: 5, marginRight: 5,}}>
+                                <View style={{flexDirection: 'column', alignItems: 'start',}}>
+                                    <Text style={[Colors.text, styles.vitalsLabel]}>Respirations</Text>
+                                    <Text style={[styles.vitalsLabel, {fontSize: 10, color: '#922'}]}>per <Text style={{fontWeight: 600, color: 'orangered'}}>{timerType}</Text> seconds</Text>
+                                </View>
+                                <TextInput
+                                    style={[Colors.textInput, styles.number]}
+                                    onChangeText={(value)=>setVitalSnap(Object.assign({}, vitalSnap, {RR: value}))}
+                                    keyboardType='number-pad'
+                                />
+                            </View>
+                            
+                            <View style={{flex: 3}}>
+                                <Text style={[Colors.text, {flex: 1}]}>Quality</Text>
+                                <TextInput
+                                    style={[Colors.textInput, {flex: 1}]}
+                                    onChangeText={(e) => setVitalSnap(Object.assign({}, vitalSnap, {RRQ: e}))}
+                                />
+                            </View>
+
+                        </View>
                     </View>
-                </View>
-                <View style={styles.vitalsRow}>
-                    <View style={Object.assign({}, styles.vitalsBox, {
-                        width: '100%',
-                    })}>
-                        <Text style={[Colors.text, styles.vitalsLabel]}>Skin Color, Temperature, Moisture</Text>
+
+                    <View style={[styles.vitalsRow, {flexDirection: 'column'}]}>
+                        <Text style={[Colors.text]}>Skin Color, Temperature, and Moisture</Text>
                         <TextInput
                             style={[Colors.textInput, styles.input]}
                             onChangeText={(value)=>setVitalSnap(Object.assign({}, vitalSnap, {skin: value}))}
-                            />
+                        />
                     </View>
-                </View>
-                <View style={{width: '100%', alignItems: 'center'}}>
-                    <Pressable
-                        style={Object.assign({}, styles.button, {
-                            marginTop: -10,
-                        })}
-                        onPress={submit}
-                        >
-                        <Text>NEXT</Text>
-                    </Pressable>
-                    <Button
-                        title='dev test'
-                        onPress={()=>submit('hello, there')}
-                    />
+
+                    <View style={{flexDirection: 'row', justifyContent: 'space-around', padding: 25,}}>
+                        <View style={styles.timer}>
+                            <Switch
+                                value={timerToggle}
+                                onValueChange={()=>{
+                                    toggleTimer(prevState => !prevState)
+                                    switchTimer()
+                                }}
+                                disabled={timerActive}
+                                trackColor={{true: 'gray'}}
+                            />
+                            <View>
+                                <Timer timerType={timerType} />
+                            </View>
+                        </View>
+                        
+                        <View style={styles.buttonContainer}>
+                            <Pressable
+                                style={styles.button}
+                                onPress={submit}
+                                >
+                                <Text>NEXT</Text>
+                            </Pressable>
+                            <Button
+                                title='dev test'
+                                onPress={()=>submit('hello, there')}
+                            />
+                        </View>
+                    </View>
+
+
                 </View>
             </View>
+
         </TouchableWithoutFeedback>
     )
 }
@@ -463,6 +494,7 @@ export default function Soap() {
         </NavigationContainer>
     )
 }
+
 const styles = StyleSheet.create({
     container: {
         height: '100%',
@@ -474,7 +506,6 @@ const styles = StyleSheet.create({
         borderWidth: 2,
         borderRadius: 5,
         width: '100%',
-        height: 50,
         fontSize: 22,
         padding: 2,
     },
@@ -493,28 +524,23 @@ const styles = StyleSheet.create({
         height: 50,
         backgroundColor: 'limegreen',
     },
-    vitalsGrid: {
-        width: '80%',
-        marginLeft: '10%',
-        justifyContent: 'top',
-        alignItems: 'left'
+    vitalsChart: {
+        backgroundColor: Colors.container.backgroundColor,
+        width: '100%',
     },
     vitalsRow: {
-        height: '22.5%',
-        width: '100%',
+        height: '15%',
+        width: '95%',
+        marginLeft: '2.5%',
         flexDirection: 'row',
-        justifyContent: 'center',
+        borderBottomColor: Colors.text.color,
+        borderBottomWidth: 2,
         alignItems: 'center',
-        columnGap: 30,
-    },
-    vitalsBox: {
-        flexDirection: 'column',
-        textAlign: 'center',
-        alignItems: 'center',
-        width: '35%',
+        gap: 5,
     },
     vitalsLabel: {
-        textAlign: 'center',
+        textAlign: 'right',
+        width: '100%',
         fontSize: 16,
         marginBottom: 3,
     },
@@ -543,9 +569,10 @@ const styles = StyleSheet.create({
         color: Colors.textInput.color,
     },
     timer: {
-        width: '20%',
-        paddingTop: 8,
-        borderRadius: 7,
+        borderColor: 'whitesmoke',
+        borderWidth: 2,
+        width: 100,
+        alignItems: 'center',
     },
     sexOptions: {
         flexDirection: 'row',

@@ -33,6 +33,8 @@ export default function usePalette() {
         },
         textInput: {
             backgroundColor: '#3b3d3b',
+            borderColor: 'transparent',
+            borderRadius: 5,
             color: 'whitesmoke',
             textAlign: 'left',
             borderWidth: 3,
