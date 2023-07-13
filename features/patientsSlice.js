@@ -37,7 +37,8 @@ export class Patient {
                 patientName: name || '',
                 age: age || '',
                 sex: sex || 'none',
-                CC: ''
+                CC: '',
+                impression: '',
             },
             vitals: [],
             history: {

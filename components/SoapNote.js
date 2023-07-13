@@ -147,14 +147,11 @@ function Subjective({navigation}){
             }
         }
     }
-    function inputColors(value ) {
-        
-    }
 
     return(
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-        <View style={[Colors.container, styles.container]}>
-            <Text style={Colors.text}>Name: </Text>
+        <View style={[Colors.container, styles.container, {paddingTop: 10}]}>
+            <Text style={[Colors.text, {width: '70%', textAlign: 'left'}]}>Name: </Text>
             <Pressable style={{width: '70%'}}>
                 <TextInput
                     style={[Colors.textInput, styles.input]}
@@ -182,34 +179,48 @@ function Subjective({navigation}){
                         <Pressable
                             style={[ styles.sexButton, buttonColors('M') ]}
                             onPress={()=>updateSubjective(Object.assign({}, subjective, {sex: 'M'}))}
-                            >
+                        >
                             <Ionicons name='male' size={36} color='#2986CC' />
                         </Pressable>
+
                         <Pressable
                             style={[ styles.sexButton, buttonColors('F') ]}
                             onPress={()=>updateSubjective(Object.assign({}, subjective, {sex: 'F'}))}
                         >
                             <Ionicons name='female' size={36} color='#C90076' />
                         </Pressable>
+                        
                         <Pressable
                             style={[ styles.sexButton, buttonColors('U') ]}
                             onPress={()=>updateSubjective(Object.assign({}, subjective, {sex: 'U'}))}
-                            >
+                        >
                             <Ionicons name='transgender' size={36} color='white' />
                         </Pressable>
                     </View>
-
                 </View>
             </View>
-            <Text style={Colors.text}>Chief Complaint:</Text>
+            
+            <Text style={[Colors.text, {width: '70%', textAlign: 'left'}]}>Chief Complaint:</Text>
             <Pressable style={{width: '70%'}}>
                 <TextInput
                     style={[Colors.textInput, styles.input]}
                     value={subjective.CC}
+                    multiline
                     onChangeText={(value)=>updateSubjective(Object.assign( {}, subjective, {CC: value} ))}
                     />
 
             </Pressable>
+
+            <Text style={[Colors.text, {width: '70%', textAlign: 'left'}]}>General Impression:</Text>
+            <Pressable style={{width: '70%'}}>
+                <TextInput
+                    style={[Colors.textInput, styles.input]}
+                    value={subjective.impression}
+                    multiline
+                    onChangeText={(value)=>updateSubjective(Object.assign( {}, subjective, {impression: value} ))}
+                />
+            </Pressable>
+            
             <Pressable
                 style={styles.button}
                 onPress={()=>{
@@ -228,7 +239,8 @@ function Subjective({navigation}){
                         patientName: 'Jane Doe',
                         age: '32',
                         sex: 'F',
-                        CC: 'unknown'
+                        CC: 'unknown',
+                        impression: 'prone near bed, no obvious wounds'
                     }
                     dispatch(storeSubjective(testSub))
                     dispatch(addPatient(testSub))
