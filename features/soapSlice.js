@@ -28,6 +28,16 @@ export const soapSlice = createSlice({
                 })
             });
         },
+        storeSceneSizeup: (state, action) => {
+            if (action.payload.PMOI) {
+                console.log("POSITIVE MOI!")
+            }
+            return Object.assign({}, state, {
+                PMOI: action.payload.PMOI,
+                MOI: action.payload.MOI,
+                NOI: action.payload.NOI,
+            })
+        },
         storeSubjective: (state, action) => {
             let sub = Object.assign({}, state.subjective, action.payload)
             return Object.assign({}, state, {
@@ -59,5 +69,5 @@ export const soapSlice = createSlice({
     }
 })
 
-export const {storeSubjective, storeVitalsSnapshot, changeTimerType, startStopState, storeHistory, loadPatient, newSoap} = soapSlice.actions
+export const {storeSceneSizeup, storeSubjective, storeVitalsSnapshot, changeTimerType, startStopState, storeHistory, loadPatient, newSoap} = soapSlice.actions
 export default soapSlice.reducer

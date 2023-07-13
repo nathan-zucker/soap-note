@@ -19,7 +19,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 
-import { storeSubjective, storeVitalsSnapshot, storeHistory, changeTimerType, toggleTimer, startStopState } from '../features/soapSlice';
+import { storeSceneSizeup, storeSubjective, storeVitalsSnapshot, storeHistory, changeTimerType, toggleTimer, startStopState } from '../features/soapSlice';
 import { addPatient, updatePatient, storeVitalSnap } from '../features/patientsSlice';
 import { cameraOn, cameraOff, savePhoto } from '../features/cameraSlice';
 
@@ -31,6 +31,101 @@ import usePalette from '../config/styles';
 const Colors = usePalette()
 const Drawer = createDrawerNavigator()
 const Stack = createNativeStackNavigator();
+
+function SceneSizeup({navigation}){
+
+    const [PMOI, setPMOI] = useState(undefined)
+    const [MOI, setMOI] = useState('')
+    const [NOI, setNOI] = useState('')
+
+    const dispatch = useDispatch()
+
+    function submit() {
+        dispatch(storeSceneSizeup({
+            PMOI: PMOI,
+            MOI: MOI,
+            NOI: NOI,
+        }))
+    }
+
+    return (
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+            <View style={[Colors.container]}>
+                <Text style={[Colors.text, {fontSize: 45, textAlign: 'center', color: 'orangered'}]}>STOP!</Text>
+                <Text style={[Colors.text, {textAlign: 'center'}]}>Look around the scene for any safety hazards.</Text>
+                <Text style={[Colors.text, {textAlign: 'center'}]}>Look at the patient and determine what happened.</Text>
+                <Text style={[Colors.text, {textAlign: 'center'}]}>medical? trauma? or both?</Text>
+                <View>
+                    <Text style={[Colors.text, {textAlign: 'center', color: 'orangered', fontSize: 25, marginTop: 10}]}>Positive MOI?</Text>
+                    <View style={{
+                        flexDirection: 'row',
+                        justifyContent: 'center',
+                        gap: 10,
+                        margin: 10,
+                    }}>
+                        <Pressable
+                            onPress={()=>setPMOI(false)}
+                            style={[Colors.button, (()=> PMOI === undefined ? {} : PMOI ? Colors.disabled : Colors.buttonSelected)(), {width: 60, height: 40}]}
+                        >
+                            <Text style={{
+                                fontWeight: 500,
+                                fontSize: 25,
+                                textAlign: 'center',
+                                color: PMOI === 'undefined' ? 'whitesmoke' : ( PMOI ? Colors.disabled.color : Colors.text.color ),
+                            }}>NO</Text>
+                        </Pressable>
+
+                        <Pressable
+                            onPress={()=>setPMOI(true)}
+                            style={{
+                                width: 60,
+                                height: 40,
+                                backgroundColor: (() => PMOI === undefined ? 'orange' : PMOI ? 'orangered' : Colors.disabled.backgroundColor)(),
+                                justifyContent: 'center',
+                            }}
+                        >
+                            <Text style={{
+                                fontWeight: 500,
+                                fontSize: 25,
+                                textAlign: 'center',
+                                color: PMOI === undefined ? 'black' : ( PMOI ? 'whitesmoke' : Colors.disabled.color),
+                            }}>YES</Text>
+                        </Pressable>
+                    </View>
+                </View>
+                <Text style={[Colors.text, {textAlign: 'center'}]}></Text>
+
+                <View style={{width: '95%', marginLeft: '2.5%'}}>
+                    <Text style={Colors.text}>Mechanism of Injury:</Text>
+                    <TextInput
+                        style={Colors.textInput}
+                        multiline
+                        onChangeText={(e)=>setMOI(e)}
+                    />
+                    
+                    <Text style={[Colors.text, {marginTop: 10}]}>Nature of Illness:</Text>
+                    <TextInput
+                        style={Colors.textInput}
+                        multiline
+                        onChangeText={(e)=>setNOI(e)}
+                    />
+                </View>
+
+                <View style={{alignItems: 'center'}}>
+                    <Pressable
+                        style={styles.button}
+                        onPress={()=>{
+                            navigation.navigate("Subjective")
+                            submit()
+                        }}
+                    >
+                    <Text>NEXT</Text>
+                    </Pressable>
+                </View>
+            </View>
+        </TouchableWithoutFeedback>
+    )
+}
 
 function Subjective({navigation}){
     const dispatch = useDispatch()
@@ -487,9 +582,10 @@ export default function Soap() {
     return(
         <NavigationContainer independent={true}>
             <Drawer.Navigator
-                initialRouteName='Subjective'
+                initialRouteName='Scene Size-up'
                 screenOptions={Colors.navigator}
             >
+                <Drawer.Screen name='Scene Size-up' component={SceneSizeup} />
                 <Drawer.Screen name='Subjective' component={Subjective} />
                 <Drawer.Screen name='Vitals' component={Vitals}/>
                 <Drawer.Screen name='History' component={History}/>

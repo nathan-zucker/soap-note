@@ -25,11 +25,24 @@ export default function usePalette() {
         text: {
             color: 'whitesmoke'
         },
+        textAlt: {
+            color: '#1a1a1a'
+        },
         button: {
             backgroundColor: '#3b3d3b',    
             textAlign: 'center',
             alignItems: 'center',
             justifyContent: 'center',
+        },
+        buttonSelected: {
+            backgroundColor: '#5d5f5d',
+            textAlign: 'center',
+            alignItems: 'center',
+            justifyContent: 'center',
+        },
+        disabled: {
+            backgroundColor: '#2a2b2a',
+            color: '#5d5f5d',
         },
         textInput: {
             backgroundColor: '#3b3d3b',
