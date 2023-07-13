@@ -30,6 +30,9 @@ export class Patient {
         return {
             name: name,
             id: id,
+            PMOI: undefined,
+            MOI: '',
+            NOI: '',
             subjective: {
                 patientName: name || '',
                 age: age || '',
