@@ -19,10 +19,10 @@ export default function Home() {
     return (
         <View style={{width: '100%', height: '100%'}}>
             <Stack.Navigator
-                initialRouteName="welcome"
+                initialRouteName="Home"
                 screenOptions={Colors.navigator}
             >
-                <Stack.Screen name='welcome' component={LaunchScreen}  />
+                <Stack.Screen name='Home' component={LaunchScreen}  />
                 <Stack.Screen name='new patient' component={Soap}  />
                 <Stack.Screen name='patients' component={PatientView} />
             </Stack.Navigator>

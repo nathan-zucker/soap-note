@@ -267,6 +267,7 @@ function Vitals({navigation}) {
                     </View>
 
                     <View style={{flexDirection: 'row', justifyContent: 'space-around', padding: 25,}}>
+                        
                         <View style={styles.timer}>
                             <Switch
                                 value={timerToggle}
@@ -276,6 +277,7 @@ function Vitals({navigation}) {
                                 }}
                                 disabled={timerActive}
                                 trackColor={{true: 'gray'}}
+                                style={styles.timerSwitch}
                             />
                             <View>
                                 <Timer timerType={timerType} />
@@ -571,8 +573,12 @@ const styles = StyleSheet.create({
     timer: {
         borderColor: 'whitesmoke',
         borderWidth: 2,
-        width: 100,
+        width: 120,
+        height: 120,
+        borderRadius: '100%',
         alignItems: 'center',
+    },
+    timerSwitch: {
     },
     sexOptions: {
         flexDirection: 'row',

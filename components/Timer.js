@@ -61,9 +61,7 @@ export default function Timer (props) {
     }
 
     return (
-        <View style={{
-            alignItems: 'center',
-        }}>
+        <View style={{alignItems: 'center'}}>
             <Text style={[Colors.text, {textAlign: 'center', fontSize: 30}]}>{timeDisplay}</Text>
             <Button
                 title='start'
