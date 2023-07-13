@@ -2,7 +2,7 @@ import { View, Text, Switch, Button, Vibration } from "react-native"
 import { useState } from "react"
 import { useEffect } from "react"
 import { startStopState } from "../features/soapSlice"
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 
 import usePalette from "../config/styles"
 
@@ -15,9 +15,8 @@ export default function Timer (props) {
     const [timerLength, setTimerLength] = useState(30)
     const [timerToggle, toggleTimer] = useState(false)
     const [timeDisplay, setTimeDisplay] = useState(30)
-    const [timerActive, setTimerActive] = useState(false)
+    const timerActive = useSelector(state => state.soap.timer.active)
 
-    const toggleSwitch = () => toggleTimer((prevState) => !prevState)
     useEffect(()=>{
         if (timerType === 30) {
             setTimerLength(30)
@@ -31,30 +30,29 @@ export default function Timer (props) {
         }
     },[timerType])
     
+    const tick = 100
+
     useEffect(()=>{
-        if (timerActive === true) {
-            var display = timeDisplay;
+        const interval = setInterval(() => {
+            if (!timerActive) {
+                setTimeDisplay(timerType)
+                return;
+            }
+            if ( timeDisplay === 0 ) {
+                console.log('TIMER END')
+                clearInterval(interval)
+                endTimer()
+                return;
+            }
+            setTimeDisplay(timeDisplay-1)
+        }, tick)
 
-            const interval = setInterval(() => {
-                display--;
-                if (display < 0) {
-                    clearInterval(interval)
-                    setTimerActive(false)
-                    endTimer()
-                }
-                else {
-                    setTimeDisplay(display)
-                }
-            }, 100)
-        }
-    },[timeDisplay, setTimeDisplay, timerActive, setTimerActive, endTimer])
-
-    const startTimer = () => {
-        setTimerActive(true)
-    }
+        return () => clearInterval(interval)
+    },[timerActive, timeDisplay, setTimeDisplay])
 
     const endTimer = () => {
         Vibration.vibrate()
+        dispatch(startStopState(false))
         setTimeout(()=>{
             setTimeDisplay(timerLength)
         },1000)
@@ -62,15 +60,7 @@ export default function Timer (props) {
 
     return (
         <View style={{alignItems: 'center'}}>
-            <Text style={[Colors.text, {textAlign: 'center', fontSize: 30}]}>{timeDisplay}</Text>
-            <Button
-                title='start'
-                onPress={()=>{
-                    startTimer()
-                    dispatch(startStopState(true))
-                }}
-                disabled={timerActive}
-            />
+            <Text style={[Colors.text, {textAlign: 'center', fontSize: 45}]}>{timeDisplay}</Text>
         </View>
     )
 }

@@ -5,6 +5,7 @@ export const defaultTimer = {
     type: 30,
     active: false,
     factor: 2,
+    icon: 'play-circle-outline'
 }
 
 export class VitalSnap {

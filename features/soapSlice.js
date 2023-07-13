@@ -2,11 +2,13 @@ import { createSlice } from "@reduxjs/toolkit";
 
 import { VitalSnap } from "./patientsSlice";
 
-import { Patient } from "./patientsSlice";
+import { Patient, defaultTimer } from "./patientsSlice";
 
 export const soapSlice = createSlice({
     name: 'soap',
-    initialState: new Patient(),
+    initialState: Object.assign({}, new Patient(), {
+        timer: defaultTimer
+    }),
     
     reducers: {
         changeTimerType: (state, action) => {
@@ -18,11 +20,11 @@ export const soapSlice = createSlice({
                 })
             });
         },
-        startStopState: (state, action) => {
-            console.log('toggling')
+        startStopState: (state) => {
             return Object.assign({}, state, {
                 timer: Object.assign({}, state.timer, {
-                    active: action.payload,
+                    active: !state.timer.active,
+                    icon: !state.timer.active ? 'refresh' : 'play-circle-outline',
                 })
             });
         },

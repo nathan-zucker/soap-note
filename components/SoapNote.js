@@ -19,7 +19,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 
-import { storeSubjective, storeVitalsSnapshot, storeHistory, changeTimerType, toggleTimer } from '../features/soapSlice';
+import { storeSubjective, storeVitalsSnapshot, storeHistory, changeTimerType, toggleTimer, startStopState } from '../features/soapSlice';
 import { addPatient, updatePatient, storeVitalSnap } from '../features/patientsSlice';
 import { cameraOn, cameraOff, savePhoto } from '../features/cameraSlice';
 
@@ -164,6 +164,7 @@ function Vitals({navigation}) {
     const [timerToggle, toggleTimer] = useState(false)
     const [timerActive, setTimerActive] = useState(false)
     const [timerType, setTimerType] = useState(30)
+    const playPauseIcon = useSelector(state=>state.soap.timer.icon)
 
     const switchTimer = () => {
         if (timerType === 30) {
@@ -194,10 +195,8 @@ function Vitals({navigation}) {
 
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false} style={Colors.container}>
-            <View style={styles.container}>
-
+            <View style={[Colors.container, styles.container]}>
                 <View style={styles.vitalsChart}>
-                    
                     <View style={styles.vitalsRow}>
                         <Text style={[Colors.text, styles.vitalsLabel, {flex: 1}]}>Level of Consciousness</Text>
                         <TextInput
@@ -208,7 +207,6 @@ function Vitals({navigation}) {
 
                     <View style={styles.vitalsRow}>
                         <View style={{width: '100%', flexDirection: 'row',}}>
-                            
                             <View style={{flexDirection: 'row', flex: 2, justifyContent: 'flex-end', gap: 5, marginRight: 5,}}>
                                 <View style={{flexDirection: 'column', alignItems: 'start',}}>
                                     <Text style={[Colors.text, styles.vitalsLabel]}>Heart Rate</Text>
@@ -228,13 +226,11 @@ function Vitals({navigation}) {
                                     onChangeText={(e) => setVitalSnap(Object.assign({}, vitalSnap, {HRQ: e}))}
                                 />
                             </View>
-
                         </View>
                     </View>
                     
                     <View style={styles.vitalsRow}>
                         <View style={{width: '100%', flexDirection: 'row',}}>
-                            
                             <View style={{flexDirection: 'row', flex: 2, justifyContent: 'flex-end', gap: 5, marginRight: 5,}}>
                                 <View style={{flexDirection: 'column', alignItems: 'start',}}>
                                     <Text style={[Colors.text, styles.vitalsLabel]}>Respirations</Text>
@@ -246,7 +242,7 @@ function Vitals({navigation}) {
                                     keyboardType='number-pad'
                                 />
                             </View>
-                            
+
                             <View style={{flex: 3}}>
                                 <Text style={[Colors.text, {flex: 1}]}>Quality</Text>
                                 <TextInput
@@ -254,11 +250,10 @@ function Vitals({navigation}) {
                                     onChangeText={(e) => setVitalSnap(Object.assign({}, vitalSnap, {RRQ: e}))}
                                 />
                             </View>
-
                         </View>
                     </View>
 
-                    <View style={[styles.vitalsRow, {flexDirection: 'column'}]}>
+                    <View style={[styles.vitalsRow, {flexDirection: 'column', paddingTop: 5}]}>
                         <Text style={[Colors.text]}>Skin Color, Temperature, and Moisture</Text>
                         <TextInput
                             style={[Colors.textInput, styles.input]}
@@ -267,18 +262,27 @@ function Vitals({navigation}) {
                     </View>
 
                     <View style={{flexDirection: 'row', justifyContent: 'space-around', padding: 25,}}>
-                        
                         <View style={styles.timer}>
-                            <Switch
-                                value={timerToggle}
-                                onValueChange={()=>{
+                            <Pressable
+                                style={[styles.timerSwitch, {transform: [{translateX: -45}, {translateY: -45}]}]}
+                                onPress={()=>{
                                     toggleTimer(prevState => !prevState)
                                     switchTimer()
                                 }}
                                 disabled={timerActive}
-                                trackColor={{true: 'gray'}}
-                                style={styles.timerSwitch}
-                            />
+                            >
+                                <Ionicons name='stopwatch-outline' style={[Colors.text, {fontSize: 30, marginBottom: 1}]} />
+                            </Pressable>
+
+                            <Pressable
+                                style={[styles.timerSwitch, {transform: [{translateX: 45}, {translateY: -45}]}]}
+                                onPress={()=>{
+                                    dispatch(startStopState())
+                                }}
+                            >
+                                <Ionicons name={playPauseIcon} style={[Colors.text, {fontSize: 30, marginLeft: 2}]} />
+                            </Pressable>
+                            
                             <View>
                                 <Timer timerType={timerType} />
                             </View>
@@ -291,17 +295,15 @@ function Vitals({navigation}) {
                                 >
                                 <Text>NEXT</Text>
                             </Pressable>
+
                             <Button
                                 title='dev test'
                                 onPress={()=>submit('hello, there')}
                             />
                         </View>
                     </View>
-
-
                 </View>
             </View>
-
         </TouchableWithoutFeedback>
     )
 }
@@ -499,8 +501,6 @@ export default function Soap() {
 
 const styles = StyleSheet.create({
     container: {
-        height: '100%',
-        width: '100%',
         alignItems: 'center',
         gap: 5,
     },
@@ -577,8 +577,15 @@ const styles = StyleSheet.create({
         height: 120,
         borderRadius: '100%',
         alignItems: 'center',
+        justifyContent: 'center',
     },
     timerSwitch: {
+        borderWidth: 2,
+        borderColor: 'whitesmoke',
+        borderRadius: '100%',
+        padding: 5,
+        position: 'absolute',
+        backgroundColor: Colors.container.backgroundColor,
     },
     sexOptions: {
         flexDirection: 'row',
