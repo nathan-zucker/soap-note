@@ -1,7 +1,8 @@
 import { View, Text, Pressable, StyleSheet } from "react-native";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+
 
 import { newSoap } from "../features/soapSlice";
 
@@ -16,6 +17,8 @@ const Stack = createNativeStackNavigator()
 const Colors = usePalette()
 
 export default function Home() {
+  const patientName = useSelector(state => state.soap.name)
+  const pmoi = useSelector(state => state.soap.PMOI)
     return (
         <View style={{width: '100%', height: '100%'}}>
             <Stack.Navigator
@@ -23,7 +26,13 @@ export default function Home() {
                 screenOptions={Colors.navigator}
             >
                 <Stack.Screen name='Home' component={LaunchScreen}  />
-                <Stack.Screen name='new patient' component={Soap}  />
+                <Stack.Screen
+                  name='new patient'
+                  component={Soap}
+                  options={{
+                    title: (patientName || 'new patient') + (pmoi ? ' \u26A0' : ''),
+                  }}
+                />
                 <Stack.Screen name='patients' component={PatientView} />
             </Stack.Navigator>
             {/**

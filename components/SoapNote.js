@@ -19,7 +19,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 
-import { storeSceneSizeup, storeSubjective, storeVitalsSnapshot, storeHistory, changeTimerType, toggleTimer, startStopState } from '../features/soapSlice';
+import { storePMOI, storeSceneSizeup, storeSubjective, storeVitalsSnapshot, storeHistory, changeTimerType, toggleTimer, startStopState } from '../features/soapSlice';
 import { addPatient, updatePatient, storeVitalSnap } from '../features/patientsSlice';
 import { cameraOn, cameraOff, savePhoto } from '../features/cameraSlice';
 
@@ -34,9 +34,11 @@ const Stack = createNativeStackNavigator();
 
 function SceneSizeup({navigation}){
 
+    const soap = useSelector(state=>state.soap)
     const [PMOI, setPMOI] = useState(undefined)
     const [MOI, setMOI] = useState('')
     const [NOI, setNOI] = useState('')
+    const [moiIcon, setMoiIcon] = useState('flash-off')
 
     const dispatch = useDispatch()
 
@@ -48,13 +50,13 @@ function SceneSizeup({navigation}){
         }))
     }
 
+
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
             <View style={[Colors.container]}>
                 <Text style={[Colors.text, {fontSize: 45, textAlign: 'center', color: 'orangered'}]}>STOP!</Text>
                 <Text style={[Colors.text, {textAlign: 'center'}]}>Look around the scene for any safety hazards.</Text>
                 <Text style={[Colors.text, {textAlign: 'center'}]}>Look at the patient and determine what happened.</Text>
-                <Text style={[Colors.text, {textAlign: 'center'}]}>medical? trauma? or both?</Text>
                 <View>
                     <Text style={[Colors.text, {textAlign: 'center', color: 'orangered', fontSize: 25, marginTop: 10}]}>Positive MOI?</Text>
                     <View style={{
@@ -64,8 +66,11 @@ function SceneSizeup({navigation}){
                         margin: 10,
                     }}>
                         <Pressable
-                            onPress={()=>setPMOI(false)}
-                            style={[Colors.button, (()=> PMOI === undefined ? {} : PMOI ? Colors.disabled : Colors.buttonSelected)(), {width: 60, height: 40}]}
+                            onPress={()=>{
+                                dispatch(storePMOI(false))
+                                setPMOI(false)
+                            }}
+                            style={[Colors.button, PMOI === undefined ? {} : PMOI ? Colors.disabled : Colors.buttonSelected, {width: 60, height: 40}]}
                         >
                             <Text style={{
                                 fontWeight: 500,
@@ -76,11 +81,14 @@ function SceneSizeup({navigation}){
                         </Pressable>
 
                         <Pressable
-                            onPress={()=>setPMOI(true)}
+                            onPress={()=>{
+                                dispatch(storePMOI(true))
+                                setPMOI(true)
+                            }}
                             style={{
                                 width: 60,
                                 height: 40,
-                                backgroundColor: (() => PMOI === undefined ? 'orange' : PMOI ? 'orangered' : Colors.disabled.backgroundColor)(),
+                                backgroundColor: PMOI === undefined ? 'orange' : PMOI ? 'orangered' : Colors.disabled.backgroundColor,
                                 justifyContent: 'center',
                             }}
                         >
@@ -92,6 +100,7 @@ function SceneSizeup({navigation}){
                             }}>YES</Text>
                         </Pressable>
                     </View>
+                    <Ionicons name={soap.PMOI ? 'flash' : 'flash-off'} style={[Colors.text, {fontSize: 32, textAlign: 'center'}]} />
                 </View>
                 <Text style={[Colors.text, {textAlign: 'center'}]}></Text>
 

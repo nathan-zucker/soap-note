@@ -163,7 +163,7 @@ export const patientsSlice = createSlice({
                 }
             }
             // ELSE ADD NEW PATIENT TO THE LIST
-            console.log([...state, newPatient])
+            //console.log([...state, newPatient])
             return [...state, newPatient]
         },
         updatePatient: (state, action) => {

@@ -11,6 +11,12 @@ export const soapSlice = createSlice({
     }),
     
     reducers: {
+        storePMOI: (state, action) => {
+            console.log('store PMOI ', action.payload)
+            return Object.assign({}, state, {
+                PMOI: action.payload
+            })
+        },
         changeTimerType: (state, action) => {
             console.log('changing timer type', action.payload)
             return Object.assign({}, state, {
@@ -39,10 +45,10 @@ export const soapSlice = createSlice({
             })
         },
         storeSubjective: (state, action) => {
-            let sub = Object.assign({}, state.subjective, action.payload)
+            console.log('NAME: ', action.payload.patientName)
             return Object.assign({}, state, {
-                name: sub.patientName,
-                subjective: sub
+                name: action.payload.patientName,
+                subjective: Object.assign({}, state.subjective, action.payload),
             })
         },
         storeVitalsSnapshot: (state, action) =>  {
@@ -69,5 +75,5 @@ export const soapSlice = createSlice({
     }
 })
 
-export const {storeSceneSizeup, storeSubjective, storeVitalsSnapshot, changeTimerType, startStopState, storeHistory, loadPatient, newSoap} = soapSlice.actions
+export const {storePMOI, storeSceneSizeup, storeSubjective, storeVitalsSnapshot, changeTimerType, startStopState, storeHistory, loadPatient, newSoap} = soapSlice.actions
 export default soapSlice.reducer
