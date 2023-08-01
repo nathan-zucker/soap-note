@@ -1,6 +1,6 @@
 import { View, Text, Pressable, Button, StyleSheet, Dimensions, Alert } from "react-native"
 import { useSelector, useDispatch } from "react-redux"
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
     LineChart,
     BarChart,
@@ -94,7 +94,7 @@ function Patient({navigation, data}) {
             </View>
 
             <View style={styles.vitals}>
-                <VitalsChart vitals={data.objective.vitals} />
+                <VitalsChart vitals={data.vitals} />
             </View>
                     
             <View>
@@ -268,6 +268,13 @@ const VitalsChart = (props) => {
 function HomeScreen() {
 
     const patientsData = useSelector((state) => state.patients)
+    const soapNote = useSelector((state) => state.soap)
+
+    const[patientsAndSoap, setPatientsAndSoap] = useState()
+
+    useEffect(()=>{
+        setPatientsAndSoap([...patientsData, soapNote])
+    },[patientsData, soapNote, setPatientsAndSoap])
 
     const patientNames = patientsData.map((patient) => patient.name)
 
@@ -275,6 +282,9 @@ function HomeScreen() {
         <View style={Colors.container}>
             <Text style={Colors.text}>Here is a sub-menu of all the patients</Text>
             <Text style={Colors.text}>Current Patient{patientNames.length > 1 ? 's' : null}: {patientNames.join(', ')}</Text>
+            <Button title="console log patient data" onPress={() => {
+                patientsData.forEach(d => console.log(d.name, d.vitals[d.vitals.length - 1]))
+            }} />
         </View>
     )
 }
@@ -291,6 +301,9 @@ export default function PatientView() {
         >
             <Drawer.Screen name='Patient Overview' component={HomeScreen} />
             {patients.map(patient => <Drawer.Screen name={patient.name} key={patient.name} children={()=><Patient data={patient}/>} />)}
+            {/**
+            
+             */}
         </Drawer.Navigator>
     )
 }

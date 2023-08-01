@@ -114,7 +114,8 @@ export const patientsSlice = createSlice({
             console.log('adding patient...', action.payload.patientName)
             
             let newPatient = Object.assign({}, new Patient(), {
-                subjective: action.payload
+                subjective: action.payload,
+                name: action.payload.patientName,
             })
             
             //CHECK FOR EXISTING PATIENT IN DATABASE

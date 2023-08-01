@@ -25,15 +25,16 @@ export default function Home() {
                 initialRouteName="Home"
                 screenOptions={Colors.navigator}
             >
-                <Stack.Screen name='Home' component={LaunchScreen}  />
+                <Stack.Screen name='Home' id='home' component={LaunchScreen}  />
                 <Stack.Screen
                   name='new patient'
+                  id='soap'
                   component={Soap}
                   options={{
                     title: (patientName || 'new patient') + (pmoi ? ' \u26A0' : ''),
                   }}
                 />
-                <Stack.Screen name='patients' component={PatientView} />
+                <Stack.Screen name='patients' id='patients' component={PatientView} />
             </Stack.Navigator>
             {/**
             <BottomButtons />

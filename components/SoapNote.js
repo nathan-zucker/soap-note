@@ -100,7 +100,7 @@ function SceneSizeup({navigation}){
                             }}>YES</Text>
                         </Pressable>
                     </View>
-                    <Ionicons name={soap.PMOI ? 'flash' : 'flash-off'} style={[Colors.text, {fontSize: 32, textAlign: 'center'}]} />
+                    {/* <Ionicons name={soap.PMOI ? 'flash' : 'flash-off'} style={[Colors.text, {fontSize: 32, textAlign: 'center'}]} /> */}
                 </View>
                 <Text style={[Colors.text, {textAlign: 'center'}]}></Text>
 
