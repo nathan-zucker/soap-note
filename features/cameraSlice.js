@@ -6,11 +6,7 @@ export const cameraSlice = createSlice({
     name: 'camera',
     initialState: {
         active: false,
-        photos: [
-            {
-                source: logo
-            }
-        ],
+        photos: [],
     },
     reducers: {
         toggleCamera: (state) => {
