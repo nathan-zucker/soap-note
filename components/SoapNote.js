@@ -53,7 +53,7 @@ function SceneSizeup({navigation}){
 
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-            <View style={[Colors.container]}>
+            <View style={[Colors.container, {height: '100%'}]}>
                 <Text style={[Colors.text, {fontSize: 45, textAlign: 'center', color: 'orangered'}]}>STOP!</Text>
                 <Text style={[Colors.text, {textAlign: 'center'}]}>Look around the scene for any safety hazards.</Text>
                 <Text style={[Colors.text, {textAlign: 'center'}]}>Look at the patient and determine what happened.</Text>
@@ -531,9 +531,11 @@ function Exam({navigation}) {
         
         return photos.map((photo, i) => {
             return (
-                <Pressable key={i} style={styles.thumbnail}>
+                <Pressable key={i} style={styles.thumbnail} onPress={()=>{
+                    console.log('selecting photo')
+                }}>
                     <Image
-                        source={require('../assets/favicon.png')}
+                        source={{uri: photo.uri}}
                         height={styles.thumbnail.height}
                         width={styles.thumbnail.height}
                     />
@@ -561,7 +563,7 @@ function Exam({navigation}) {
 
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-            <View style={Colors.container}>
+            <View style={[Colors.container, {height: '100%'}]}>
 
                 {cameraActive ? <ExamCamera/> : <PhotoGallery/> }
                 
@@ -586,13 +588,25 @@ function Exam({navigation}) {
                 <Pressable
                     style={[styles.button, {alignSelf: 'center'}]}
                     onPress={()=>{
-                        navigation.navigate("History")
+                        navigation.navigate("Assessment")
                     }}
                 >
                     <Text>NEXT</Text>
                 </Pressable>
             </View>
         </TouchableWithoutFeedback>
+    )
+}
+
+function Assessment({navigation}) {
+    return (
+        <View style={[Colors.container, {height: '100%'}]}></View>
+    )
+}
+
+function Plan({navigation}) {
+    return (
+        <View style={[Colors.container, {height: '100%'}]}></View>
     )
 }
 
@@ -611,6 +625,8 @@ export default function Soap() {
                 <Drawer.Screen name='Vitals' component={Vitals}/>
                 <Drawer.Screen name='History' component={History}/>
                 <Drawer.Screen name='Exam' component={Exam}/>
+                <Drawer.Screen name='Assessment' component={Assessment}/>
+                <Drawer.Screen name='Plan' component={Plan}/>
             </Drawer.Navigator>
         </NavigationContainer>
     )
@@ -620,6 +636,7 @@ const styles = StyleSheet.create({
     container: {
         alignItems: 'center',
         gap: 5,
+        height: '100%',
     },
     input: {
         borderWidth: 2,

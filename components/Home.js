@@ -75,6 +75,7 @@ const styles = StyleSheet.create({
     LaunchScreen: {
         paddingTop: '20%',
         alignItems: 'center',
+        height: '100%',
     },
     button: {
         height: '15%',

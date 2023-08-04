@@ -67,6 +67,7 @@ function Patient({navigation, data}) {
         console.log('loading soap note --->', name, data)
         dispatch(loadPatient(data))
         console.log('NAVIGATE TO SOAP')
+        
     }
 
     return (
@@ -278,12 +279,29 @@ function HomeScreen() {
 
     const patientNames = patientsData.map((patient) => patient.name)
 
+    //~~~~~~~~~~~~~~~~~~~~~~~
+    
+    function PatientPreview({data}) {
+        return (
+            <View style={Colors.container}>
+                <Text style={Colors.text}>{data.PMOI ? <Text style={[Colors.text, {color: 'orangered'}]}> \u26A0</Text> : null}{data.name}</Text>
+            </View>
+        )
+    }
+    
+    //~~~~~~~~~~~~~~~~~~~~~~~
+
+    
     return (
-        <View style={Colors.container}>
+        <View style={[Colors.container, {height: '100%'}]}>
             <Text style={Colors.text}>Here is a sub-menu of all the patients</Text>
-            <Text style={Colors.text}>Current Patient{patientNames.length > 1 ? 's' : null}: {patientNames.join(', ')}</Text>
+            
+            <View>
+                {patientsData.map(d => <PatientPreview data={d} key={d.name}/>)}
+            </View>
+
             <Button title="console log patient data" onPress={() => {
-                patientsData.forEach(d => console.log(d.name, d.vitals[d.vitals.length - 1]))
+                patientsData.forEach(d => console.log(d.name, d.vitals[d.vitals.length - 1], (d.PMOI ? 'MOI!!' : null)))
             }} />
         </View>
     )

@@ -113,7 +113,7 @@ export const patientsSlice = createSlice({
         addPatient: (state, action) => {
             console.log('adding patient...', action.payload.patientName)
             
-            let newPatient = Object.assign({}, new Patient(), {
+            let newPatient = Object.assign({}, new Patient(), action.payload, {
                 subjective: action.payload,
                 name: action.payload.patientName,
             })

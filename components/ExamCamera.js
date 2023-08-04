@@ -11,12 +11,12 @@ import { useDispatch } from "react-redux";
 
 export default function ExamCamera () {
     const dispatch = useDispatch()
+    
     const [type, setType] = useState(CameraType.back)
     const [flashOn, setFlashOn] = useState(false)
     const [flash, setFlash] = useState(Camera.Constants.FlashMode.off)
     const [flashIcon, setFlashIcon] = useState('flash-off-outline')
     const [preview, setPreview] = useState()
-    
     const [hasCameraPermission, setHasCameraPermission] = useState()
     const [hasmediaPermission, setHasMediaPermission] = useState()
 
@@ -33,6 +33,7 @@ export default function ExamCamera () {
     function toggleCameraType() {
         setType(current => (current === CameraType.back ? CameraType.front : CameraType.back))
     }
+
     function toggleFlash() {
         if (flashOn) {
             setFlash(Camera.Constants.FlashMode.off)
@@ -44,6 +45,7 @@ export default function ExamCamera () {
         } 
         setFlashOn(flashOn=>!flashOn)
     }
+
     let takePicture = async() => {
         if (cameraRef) {
             try {
@@ -62,18 +64,27 @@ export default function ExamCamera () {
             <View>
                 <Image source={{uri: preview}} style={styles.imagePreview} />
                 <View style={styles.imageOptions}>
-                    <View style={styles.imageOption}>
+                    <Pressable style={styles.imageOption} onPress={()=>{
+                        setPreview(undefined)
+                    }}>
                         <Ionicons style={styles.imageButton} name='close-circle-outline' />
                         <Text style={styles.imageButtonLabel}>retake</Text>
-                    </View>
-                    <View style={styles.imageOption}>
+                    </Pressable>
+                    <Pressable style={styles.imageOption} onPress={()=>{
+                        console.log('save photo')
+                        dispatch(savePhoto({uri: preview}))
+                        setPreview(undefined)
+                        dispatch(cameraOff())
+                    }}>
                         <Ionicons style={styles.imageButton} name='checkmark-circle-outline' />
                         <Text style={styles.imageButtonLabel}>save</Text>
-                    </View>
-                    <View style={styles.imageOption}>
+                    </Pressable>
+                    <Pressable style={styles.imageOption} onPress={()=>{
+                        console.log('add notes')
+                    }}>
                         <Ionicons style={styles.imageButton} name='clipboard-outline' />
                         <Text style={styles.imageButtonLabel}>notes</Text>
-                    </View>
+                    </Pressable>
                 </View>
             </View>
         :
@@ -149,14 +160,17 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     imagePreview: {
-        width: '100%',
-        height: '90%',
+        height: '100%',
     },
     imageOptions: {
         flexDirection: 'row',
         justifyContent: 'center',
         gap: 50,
         marginTop: 5,
+        position: 'absolute',
+        bottom: 20,
+        alignItems: 'center',
+        width: '100%',
     },
     imageOption: {
         borderRadius: 5,
