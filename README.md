@@ -1,3 +1,14 @@
+# TODO:
+[] build Assessment screen
+[] build Plan screen
+[] build Patients Overview screen
+[] build individual patient screen
+[] update patients with current soap when navigating to patients
+[] incorporate Redux Persist
+[] export data?
+
+
+
 ## scripts: 
 
 ### dev server

@@ -23,6 +23,9 @@ export default function usePalette() {
         text: {
             color: 'whitesmoke'
         },
+        header: {
+            fontSize: 18,
+        },
         textAlt: {
             color: '#1a1a1a'
         },

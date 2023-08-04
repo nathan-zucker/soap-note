@@ -50,7 +50,7 @@ export class Patient {
                 events: '',
             },
             exam: {
-                image: '',
+                photos: '',
                 description: '',
             },
             assessment: '',

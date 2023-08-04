@@ -65,6 +65,22 @@ export const soapSlice = createSlice({
                 history: action.payload
             })
         },
+        storeExam: (state, action) => {
+            return Object.assign({}, state, {
+                exam: Object.assign({}, state.exam, action.payload)
+            })
+        },
+        storeAssessment: (state, action) => {
+            console.log('storing assessment', action.payload)
+            return Object.assign({}, state, {
+                assessment: action.payload ? action.payload : state.assessment,
+            })
+        },
+        storePlan: (state, action) => {
+            return Object.assign({}, state, {
+                plan: action.payload ? action.payload : state.plan,
+            })
+        },
         loadPatient: (state, action) => {
             console.log("SOAP RECEIVED:")
             return action.payload;
@@ -75,5 +91,5 @@ export const soapSlice = createSlice({
     }
 })
 
-export const {storePMOI, storeSceneSizeup, storeSubjective, storeVitalsSnapshot, changeTimerType, startStopState, storeHistory, loadPatient, newSoap} = soapSlice.actions
+export const {storePMOI, storeSceneSizeup, storeSubjective, storeVitalsSnapshot, changeTimerType, startStopState, storeHistory, storeExam, storeAssessment, storePlan, loadPatient, newSoap} = soapSlice.actions
 export default soapSlice.reducer

@@ -19,7 +19,20 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 
-import { storePMOI, storeSceneSizeup, storeSubjective, storeVitalsSnapshot, storeHistory, changeTimerType, toggleTimer, startStopState } from '../features/soapSlice';
+import {
+    storePMOI,
+    storeSceneSizeup,
+    storeSubjective,
+    storeVitalsSnapshot,
+    storeHistory,
+    changeTimerType,
+    toggleTimer,
+    startStopState,
+    storeExam,
+    storeAssessment,
+    storePlan,
+} from '../features/soapSlice';
+
 import { addPatient, updatePatient, storeVitalSnap } from '../features/patientsSlice';
 import { cameraOn, cameraOff, savePhoto } from '../features/cameraSlice';
 
@@ -588,6 +601,10 @@ function Exam({navigation}) {
                 <Pressable
                     style={[styles.button, {alignSelf: 'center'}]}
                     onPress={()=>{
+                        dispatch(storeExam({
+                            photos: [...photos],
+                            description: examDescription,
+                        }))
                         navigation.navigate("Assessment")
                     }}
                 >
@@ -599,14 +616,81 @@ function Exam({navigation}) {
 }
 
 function Assessment({navigation}) {
+    
+    const [assessment, setAssessment] = useState('')
+
+    const dispatch = useDispatch()
+
     return (
-        <View style={[Colors.container, {height: '100%'}]}></View>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+            <View style={[Colors.container, {height: '100%'}]}>
+                
+                <Text style={[Colors.text, Colors.header]}>description: </Text>
+                <TextInput
+                    onChangeText={(text) => setAssessment(text)}
+                    style={[
+                        Colors.textInput,
+                        {
+                            minHeight: 160,
+                            width: '90%',
+                            marginHorizontal: '5%',
+                            padding: 4,
+                        }
+                    ]}
+                    multiline
+                />
+
+                <Pressable
+                    style={[styles.button, {alignSelf: 'center'}]}
+                    onPress={()=>{
+                        navigation.navigate("Plan")
+                        assessment && dispatch(storeAssessment(assessment))
+                    }}
+                    >
+                    <Text>NEXT</Text>
+                </Pressable>
+                
+            </View>
+        </TouchableWithoutFeedback>
     )
 }
 
 function Plan({navigation}) {
+    
+    const [plan, setPlan] = useState('')
+
+    const dispatch = useDispatch()
+
     return (
-        <View style={[Colors.container, {height: '100%'}]}></View>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+            <View style={[Colors.container, {height: '100%'}]}>
+                
+                <Text style={[Colors.text, Colors.header]}>description: </Text>
+                <TextInput
+                    onChangeText={(text) => setPlan(text)}
+                    style={[
+                        Colors.textInput,
+                        {
+                            minHeight: 160,
+                            width: '90%',
+                            marginHorizontal: '5%',
+                            padding: 4,
+                        }
+                    ]}
+                    multiline
+                />
+
+                <Pressable
+                    style={[styles.button, {alignSelf: 'center'}]}
+                    onPress={()=>{
+                        plan && dispatch(storePlan(plan))
+                    }}
+                    >
+                    <Text>NEXT</Text>
+                </Pressable>
+                
+            </View>
+        </TouchableWithoutFeedback>
     )
 }
 
