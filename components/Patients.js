@@ -22,6 +22,8 @@ import { loadPatient, changeTimerType, newSoap } from "../features/soapSlice";
 import usePalette from "../config/styles";
 import { ScreenOptions } from "../config/navigator";
 
+import { IconButton } from "./IconButton";
+
 const PatientDrawer = createDrawerNavigator();
 const Colors = usePalette()
 
@@ -282,16 +284,39 @@ function HomeScreen() {
     //~~~~~~~~~~~~~~~~~~~~~~~
     
     function PatientPreview({data}) {
+        let vitals = data.vitals[data.vitals.length - 1];
         return (
-            <View style={Colors.container}>
+            <View style={[Colors.container, styles.patientPreview]}>
+                
                 <Text style={Colors.text}>{data.PMOI ? <Text style={[Colors.text, {color: 'orangered'}]}> \u26A0</Text> : null}{data.name}</Text>
+                
+                <View style={{flexDirection: 'row', alignItems: 'center', gap: 15,}}>
+                    <Ionicons name='pulse' style={Colors.icon} />
+                    <View>
+                        <View style={{flexDirection: 'row', gap: 15}}>
+                            <Text style={[Colors.text]}>HR: {vitals.HR}</Text>
+                            <Text style={Colors.text}>RR: {vitals.RR}</Text>
+                        </View>
+                        <View>
+                            <Text style={Colors.text}>Last Checked: {Math.floor(new Date(Date.now() - vitals.time) / 60000)} minutes ago</Text>
+                        </View>
+                    </View>
+                </View>
+
+                <View>
+                    <Text style={Colors.text}>Plan:</Text>
+                    <Text style={Colors.text}>{data.plan}</Text>
+                </View>
+
+                <View>
+                    <IconButton icon='clipboard' text='clipboard' />
+                </View>
+
             </View>
         )
     }
-    
     //~~~~~~~~~~~~~~~~~~~~~~~
 
-    
     return (
         <View style={[Colors.container, {height: '100%'}]}>
             <Text style={Colors.text}>Here is a sub-menu of all the patients</Text>
@@ -335,6 +360,14 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         gap: 5,
         paddingTop: 5,
+    },
+    patientPreview: {
+        borderColor: Colors.text.color,
+        borderWidth: 2,
+        padding: 5,
+        width: '90%',
+        marginHorizontal: '5%',
+        marginVertical: '2%',
     },
     card: {
         width: '80%',

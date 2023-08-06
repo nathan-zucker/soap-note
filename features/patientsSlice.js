@@ -99,7 +99,8 @@ const johnDoe = () => {
                 RR: '20',
                 skin: 'norm',
             },
-        ]
+        ],
+        plan: 'Drink more water and eat meat.'
     })
     return JD
 }

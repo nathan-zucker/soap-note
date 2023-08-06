@@ -23,6 +23,11 @@ export default function usePalette() {
         text: {
             color: 'whitesmoke'
         },
+        icon: {
+            color: 'whitesmoke',
+            fontSize: 30,
+            textAlign: 'center',
+        },
         header: {
             fontSize: 18,
         },

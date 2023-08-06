@@ -661,10 +661,39 @@ function Plan({navigation}) {
 
     const dispatch = useDispatch()
 
+    const [actionItems, setActionItems] = useState([])
+
+    function ActionItem({item}) {
+        return (
+            <View>
+                <Text style={[Colors.text]}>{item}</Text>
+            </View>
+        )
+    }
+    
+    function AddActionItem() {
+        return (
+            <View>
+                <Text style={[Colors.text]}>Add an action item</Text>
+            </View>
+        )
+    }
+
+    function ActionItemList() {
+        return (
+            <View>
+                {actionItems.map((item, i) => <ActionItem key={i} item={item} />)}
+                <AddActionItem />
+            </View>
+        )
+    }
+
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
             <View style={[Colors.container, {height: '100%'}]}>
                 
+                <ActionItemList />
+
                 <Text style={[Colors.text, Colors.header]}>description: </Text>
                 <TextInput
                     onChangeText={(text) => setPlan(text)}
