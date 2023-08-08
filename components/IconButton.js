@@ -6,7 +6,7 @@ const Colors = usePalette()
 
 export function IconButton({icon, text}) {
     
-    console.log([...text].length)
+    //console.log([...text].length)
     
     return (
         <Pressable style={{
@@ -15,7 +15,6 @@ export function IconButton({icon, text}) {
             height: 50,
         }}>
             <Ionicons style={Colors.icon} name={icon} />
-            <Text style={Colors.text}>{icon}</Text>
         </Pressable>
     )
 } 

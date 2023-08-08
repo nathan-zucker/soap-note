@@ -715,7 +715,7 @@ function Plan({navigation}) {
                         plan && dispatch(storePlan(plan))
                     }}
                     >
-                    <Text>NEXT</Text>
+                    <Text>FINISH</Text>
                 </Pressable>
                 
             </View>

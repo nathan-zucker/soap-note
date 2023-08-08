@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { StyleSheet, Text, View, Button, Pressable, Image } from "react-native";
+import { StyleSheet, Text, View, Button, Pressable, Image, TextInput } from "react-native";
 
 import {Camera, CameraType} from 'expo-camera';
 import * as MediaLibrary from 'expo-media-library';
@@ -7,7 +7,13 @@ import * as MediaLibrary from 'expo-media-library';
 import { cameraOff, savePhoto } from "../features/cameraSlice";
 
 import Ionicons from '@expo/vector-icons/Ionicons';
+
+import { IconButton } from "./IconButton";
+
 import { useDispatch } from "react-redux";
+import usePalette from "../config/styles";
+
+const Colors = usePalette()
 
 export default function ExamCamera () {
     const dispatch = useDispatch()
@@ -17,6 +23,10 @@ export default function ExamCamera () {
     const [flash, setFlash] = useState(Camera.Constants.FlashMode.off)
     const [flashIcon, setFlashIcon] = useState('flash-off-outline')
     const [preview, setPreview] = useState()
+
+    const [showDescription, setShowDescription] = useState(false)
+    const [photoDescription, setPhotoDescription] = useState('')
+    
     const [hasCameraPermission, setHasCameraPermission] = useState()
     const [hasmediaPermission, setHasMediaPermission] = useState()
 
@@ -58,11 +68,51 @@ export default function ExamCamera () {
         }
     }
 
+    function AddDescription() {
+        const [description, setDescription] = useState(photoDescription)
+
+        return (
+            <View style={{position: 'absolute', width: '100%', height: '100%', top: '5%'}}>
+                <Text style={{color: 'whitesmoke', textAlign: 'center'}}>add description</Text>
+                <TextInput
+                    value={description}
+                    onChangeText={(e)=>setDescription(e)}
+                    multiline
+                    style={{width: '80%', marginHorizontal: '10%', height: '25%', backgroundColor: '#1a1a1a', color: 'whitesmoke', padding: 5}}
+                />
+                <View style={{flexDirection: 'row', justifyContent: 'center', padding: 5, gap: 20}}>
+                    <Pressable
+                        style={[Colors.button, {width: 80, padding: 5}]}
+                        onPress={()=>{
+                            setDescription('')
+                            setShowDescription(false)
+                        }}
+                    >
+                        <Ionicons name='close-circle-outline' style={Colors.icon} />
+                    </Pressable>
+                    <Pressable
+                        style={[Colors.button, {width: 80, padding: 5}]}
+                        onPress={()=>{
+                            setPhotoDescription(description)
+                            setShowDescription(false)
+                        }}    
+                    >
+                        <Ionicons name='checkmark-circle-outline' style={Colors.icon} />
+                    </Pressable>
+                </View>
+            </View>
+        )
+    }
+
     return (
         <View>
         {preview ? 
             <View>
+                
                 <Image source={{uri: preview}} style={styles.imagePreview} />
+                
+                {showDescription ? <AddDescription /> :
+
                 <View style={styles.imageOptions}>
                     <Pressable style={styles.imageOption} onPress={()=>{
                         setPreview(undefined)
@@ -72,7 +122,7 @@ export default function ExamCamera () {
                     </Pressable>
                     <Pressable style={styles.imageOption} onPress={()=>{
                         console.log('save photo')
-                        dispatch(savePhoto({uri: preview}))
+                        dispatch(savePhoto({uri: preview, description: photoDescription}))
                         setPreview(undefined)
                         dispatch(cameraOff())
                     }}>
@@ -81,11 +131,14 @@ export default function ExamCamera () {
                     </Pressable>
                     <Pressable style={styles.imageOption} onPress={()=>{
                         console.log('add notes')
+                        setShowDescription(true)
                     }}>
                         <Ionicons style={styles.imageButton} name='clipboard-outline' />
                         <Text style={styles.imageButtonLabel}>notes</Text>
                     </Pressable>
                 </View>
+                }
+
             </View>
         :
             <Camera

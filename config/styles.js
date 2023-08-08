@@ -23,6 +23,9 @@ export default function usePalette() {
         text: {
             color: 'whitesmoke'
         },
+        button: {
+            backgroundColor: '#2b2b2b',
+        },
         icon: {
             color: 'whitesmoke',
             fontSize: 30,
