@@ -547,7 +547,7 @@ function Exam({navigation}) {
         return photos.map((photo, i) => {
             return (
                 <Pressable key={i} style={styles.thumbnail} onPress={()=>{
-                    dispatch(setPreview(photo))
+                    dispatch(setPreview(i))
                     dispatch(cameraOn())
                 }}>
                     <Image

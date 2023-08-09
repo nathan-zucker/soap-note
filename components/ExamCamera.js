@@ -4,7 +4,7 @@ import { StyleSheet, Text, View, Button, Pressable, Image, TextInput } from "rea
 import {Camera, CameraType} from 'expo-camera';
 import * as MediaLibrary from 'expo-media-library';
 
-import { cameraOff, savePhoto } from "../features/cameraSlice";
+import { cameraOff, savePhoto, deletePhoto } from "../features/cameraSlice";
 
 import Ionicons from '@expo/vector-icons/Ionicons';
 
@@ -123,16 +123,16 @@ export default function ExamCamera () {
 
                 <View style={styles.imageOptions}>
                     <Pressable style={styles.imageOption} onPress={()=>{
+                        dispatch(deletePhoto(preview))
                         setPreview(undefined)
                     }}>
                         <Ionicons style={styles.imageButton} name='close-circle-outline' />
-                        <Text style={styles.imageButtonLabel}>retake</Text>
+                        <Text style={styles.imageButtonLabel}>delete</Text>
                     </Pressable>
                     <Pressable style={styles.imageOption} onPress={()=>{
                         console.log('save photo')
                         dispatch(savePhoto({uri: preview, description: photoDescription}))
                         setPreview(undefined)
-                        dispatch(cameraOff())
                     }}>
                         <Ionicons style={styles.imageButton} name='checkmark-circle-outline' />
                         <Text style={styles.imageButtonLabel}>save</Text>
