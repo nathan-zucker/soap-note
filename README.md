@@ -38,6 +38,8 @@ https://ionic.io/ionicons/v4
 ### React Native Reanimated
 https://docs.swmansion.com/react-native-reanimated/docs/fundamentals/installation
 
+### React Native Gesture Handler
+https://docs.swmansion.com/react-native-gesture-handler/docs/#installation
 
 ## Legal
 https://www.ftc.gov/business-guidance/resources/mobile-health-apps-interactive-tool

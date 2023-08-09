@@ -6,9 +6,12 @@ module.exports = function(api) {
     plugins: [
       //  V  MUST BE LAST  V
       "@babel/plugin-transform-export-namespace-from",
-      ['react-native-reanimated/plugin', {
-        relativeSourceLocation: true,
-      }],
+      [
+        'react-native-reanimated/plugin', 
+        {
+          relativeSourceLocation: true,
+        }
+    ],
     ]
   };
 };

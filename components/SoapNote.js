@@ -38,6 +38,7 @@ import { cameraOn, cameraOff, savePhoto, setPreview } from '../features/cameraSl
 
 import Timer from './Timer';
 import ExamCamera from './ExamCamera';
+import { DemoDraglist } from './DemoDraglist';
 
 import usePalette from '../config/styles';
 
@@ -692,39 +693,46 @@ function Plan({navigation}) {
     }
 
     return (
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-            <View style={[Colors.container, {height: '100%'}]}>
-                
-                <ActionItemList />
-
-                <Text style={[Colors.text, Colors.header]}>description: </Text>
-                <TextInput
-                    onChangeText={(text) => setPlan(text)}
-                    style={[
-                        Colors.textInput,
-                        {
-                            minHeight: 160,
-                            width: '90%',
-                            marginHorizontal: '5%',
-                            padding: 4,
-                        }
-                    ]}
-                    multiline
-                />
-
-                <Pressable
-                    style={[styles.button, {alignSelf: 'center'}]}
-                    onPress={()=>{
-                        plan && dispatch(storePlan(plan))
-                    }}
-                    >
-                    <Text>FINISH</Text>
-                </Pressable>
-                
-            </View>
-        </TouchableWithoutFeedback>
+        <DemoDraglist />
     )
-}
+
+    /* 
+    return (
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+        <View style={[Colors.container, {height: '100%'}]}>
+        
+        <ActionItemList />
+        
+        <Text style={[Colors.text, Colors.header]}>description: </Text>
+        <TextInput
+        onChangeText={(text) => setPlan(text)}
+        style={[
+            Colors.textInput,
+            {
+                minHeight: 160,
+                width: '90%',
+                marginHorizontal: '5%',
+                padding: 4,
+            }
+        ]}
+        multiline
+        />
+        
+        <Pressable
+        style={[styles.button, {alignSelf: 'center'}]}
+        onPress={()=>{
+            plan && dispatch(storePlan(plan))
+        }}
+        >
+        <Text>FINISH</Text>
+        </Pressable>
+        
+        </View>
+        </TouchableWithoutFeedback>
+        )
+        
+    */
+    }
 
 export default function Soap() {
     const store = useSelector(state=>state)
