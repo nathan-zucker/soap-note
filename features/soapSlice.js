@@ -87,9 +87,46 @@ export const soapSlice = createSlice({
         },
         newSoap: (state) => {
             return Object.assign({}, new Patient())
+        },
+        updatePlan: (state, action) => {
+            switch (action.payload.type) {
+                case 'add-action-item':
+                    console.log('ADD ACTION ITEM!')
+                    return Object.assign({}, state, {
+                        plan: Object.assign({}, state.plan, {
+                            actionItems: [...state.plan.actionItems, {
+                                text: action.payload.text,
+                                key: state.plan.actionItems.length,
+                                backgroundColor: 'blue'
+                            }]
+                        })
+                    });
+                    case 'update-action-items':
+                        console.log('UPDATE ACTION ITEMS...')
+                        return Object.assign({}, state, {
+                            plan: Object.assign({}, state.plan, {
+                                actionItems: action.payload.actionItems
+                            })
+                        })
+                default: return state;
+            }
         }
     }
 })
 
-export const {storePMOI, storeSceneSizeup, storeSubjective, storeVitalsSnapshot, changeTimerType, startStopState, storeHistory, storeExam, storeAssessment, storePlan, loadPatient, newSoap} = soapSlice.actions
+export const {
+    storePMOI,
+    storeSceneSizeup,
+    storeSubjective,
+    storeVitalsSnapshot,
+    changeTimerType, 
+    startStopState, 
+    storeHistory, 
+    storeExam, 
+    storeAssessment, 
+    storePlan, 
+    loadPatient, 
+    newSoap,
+    updatePlan
+} = soapSlice.actions
 export default soapSlice.reducer
