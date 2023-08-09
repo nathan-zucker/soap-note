@@ -49,6 +49,8 @@ import { DemoDraglist } from './DemoDraglist';
 import usePalette from '../config/styles';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
+import { MainStack } from './Home';
+
 const Colors = usePalette()
 const Drawer = createDrawerNavigator()
 const Stack = createNativeStackNavigator();
@@ -686,7 +688,7 @@ const initialData = [...Array(NUM_ITEMS)].map((item, index) => {
 function Plan({navigation}) {
     const dispatch = useDispatch()
     const [plan, setPlan] = useState('')
-    const [actionItems, setActionItems] = useState(initialData)
+    const actionItems = useSelector(state => state.soap.plan.actionItems)
     
     function ActionItem({item, drag, isActive}) {
         return (
@@ -706,13 +708,23 @@ function Plan({navigation}) {
         )
     }
 
-    function AddActionItem() {
+    function AddActionItem({items}) {
         const dispatch = useDispatch()
         const [newActionItem, setNewActionItem] = useState()
         const [newText, setNewText] = useState('')
 
+        const key = items.length + 1;
+
         return (
-            <View style={[Colors.container, {height: '20%', width: '90%', marginHorizontal: '5%', marginVertical: '2%'}]}>
+            <View style={[Colors.container, {height: 80, width: '90%', marginHorizontal: '5%', marginVertical: '2%'}]}>
+                <Pressable onPress={()=>{
+                    console.log('add action item')
+                    dispatch(updatePlan({
+                        type: 'add-action-item',
+                        text: newText,
+                        key: key || 0,
+                    }))
+                }}>
                 <Text style={Colors.header}>Add an Action Item</Text>
                 <TextInput
                     value={newText}
@@ -720,77 +732,46 @@ function Plan({navigation}) {
                     multiline
                     style={[Colors.textInput, {height: 50}]}
                 />
-                <Pressable onPress={()=>{
-                    console.log('add action item')
-                    dispatch(updatePlan({
-                        type: 'add-action-item',
-                        text: newText,
-                    }))
-                }}>
                     <Ionicons name='checkmark-circle-outline' style={Colors.icon} />
                 </Pressable>
             </View>
-        )
-    }
+            )
+        }
 
     return (
         <View style={Colors.container}>
-            <AddActionItem />
+            
+            <View style={[Colors.container, {height: '30%'}]}>
+                <Pressable
+                    style={[styles.button, {alignSelf: 'center', marginTop: 5}]}
+                    onPress={()=>{
+                        console.log('go back home')
+                        
+                    }}
+                >
+                    <Text>FINISH</Text>
+                </Pressable>
+
+                <AddActionItem items={actionItems} />
+
+            </View>
+
             <DraggableFlatList
                 data={actionItems}
                 onDragEnd={({data}) => {
-                    setActionItems(data)
+                    dispatch(updatePlan({
+                        type: 'update-action-items',
+                        actionItems: data,
+                    }))
                 }}
                 onRelease={()=>{console.log('released')}}
                 keyExtractor={(item) => item.key}
                 renderItem={ActionItem}
-                style={{height: '80%'}}
+                style={{height: '70%'}}
             />
-
         </View>
     )
-
-    return (
-        <DemoDraglist />
-    )
-
-    /* 
-    return (
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-        <View style={[Colors.container, {height: '100%'}]}>
-        
-        <ActionItemList />
-        
-        <Text style={[Colors.text, Colors.header]}>description: </Text>
-        <TextInput
-        onChangeText={(text) => setPlan(text)}
-        style={[
-            Colors.textInput,
-            {
-                minHeight: 160,
-                width: '90%',
-                marginHorizontal: '5%',
-                padding: 4,
-            }
-        ]}
-        multiline
-        />
-        
-        <Pressable
-        style={[styles.button, {alignSelf: 'center'}]}
-        onPress={()=>{
-            plan && dispatch(storePlan(plan))
-        }}
-        >
-        <Text>FINISH</Text>
-        </Pressable>
-        
-        </View>
-        </TouchableWithoutFeedback>
-        )
-        
-    */
-    }
+}
 
 export default function Soap() {
     const store = useSelector(state=>state)

@@ -13,7 +13,7 @@ import BottomButtons from "./BottomButtons";
 import usePalette from "../config/styles";
 
 const Drawer = createDrawerNavigator()
-const Stack = createNativeStackNavigator()
+export const MainStack = createNativeStackNavigator()
 const Colors = usePalette()
 
 export default function Home() {
@@ -21,12 +21,13 @@ export default function Home() {
   const pmoi = useSelector(state => state.soap.PMOI)
     return (
         <View style={{width: '100%', height: '100%'}}>
-            <Stack.Navigator
+            <MainStack.Navigator
+                name='MainStack'
                 initialRouteName="Home"
                 screenOptions={Colors.navigator}
             >
-                <Stack.Screen name='Home' id='home' component={LaunchScreen}  />
-                <Stack.Screen
+                <MainStack.Screen name='Home' id='Home' component={LaunchScreen}  />
+                <MainStack.Screen
                   name='new patient'
                   id='soap'
                   component={Soap}
@@ -34,8 +35,8 @@ export default function Home() {
                     title: (patientName || 'new patient') + (pmoi ? ' \u26A0' : ''),
                   }}
                 />
-                <Stack.Screen name='patients' id='patients' component={PatientView} />
-            </Stack.Navigator>
+                <MainStack.Screen name='patients' id='patients' component={PatientView} />
+            </MainStack.Navigator>
             {/**
             <BottomButtons />
              * 

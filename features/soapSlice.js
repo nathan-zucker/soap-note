@@ -91,12 +91,12 @@ export const soapSlice = createSlice({
         updatePlan: (state, action) => {
             switch (action.payload.type) {
                 case 'add-action-item':
-                    console.log('ADD ACTION ITEM!')
+                    console.log('ADD ACTION ITEM!', `key: ${action.payload.key}`)
                     return Object.assign({}, state, {
                         plan: Object.assign({}, state.plan, {
                             actionItems: [...state.plan.actionItems, {
                                 text: action.payload.text,
-                                key: state.plan.actionItems.length,
+                                key: action.payload.key,
                                 backgroundColor: 'blue'
                             }]
                         })
