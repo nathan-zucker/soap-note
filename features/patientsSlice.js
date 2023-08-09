@@ -54,7 +54,10 @@ export class Patient {
                 description: '',
             },
             assessment: '',
-            plan: '',
+            plan: {
+                narrative: '',
+                actionItems: [],
+            },
             timer: defaultTimer,
         }
     }

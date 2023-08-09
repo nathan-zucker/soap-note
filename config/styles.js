@@ -32,7 +32,9 @@ export default function usePalette() {
             textAlign: 'center',
         },
         header: {
-            fontSize: 18,
+            fontSize: 16,
+            color: 'whitesmoke',
+            marginLeft: 15,
         },
         textAlt: {
             color: '#1a1a1a'
@@ -60,6 +62,7 @@ export default function usePalette() {
             color: 'whitesmoke',
             textAlign: 'left',
             borderWidth: 3,
+            padding: 5,
         }
     }
 }

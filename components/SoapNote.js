@@ -11,6 +11,10 @@ import {
     Image,
 } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import DraggableFlatList, {
+    ScaleDecorator,
+    RenderItemParams,
+} from "react-native-draggable-flatlist";
 
 import { useSelector, useDispatch } from 'react-redux';
 import { useState, useEffect, useId } from 'react';
@@ -31,6 +35,7 @@ import {
     storeExam,
     storeAssessment,
     storePlan,
+    updatePlan,
 } from '../features/soapSlice';
 
 import { addPatient, updatePatient, storeVitalSnap } from '../features/patientsSlice';
@@ -40,7 +45,9 @@ import Timer from './Timer';
 import ExamCamera from './ExamCamera';
 import { DemoDraglist } from './DemoDraglist';
 
+
 import usePalette from '../config/styles';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const Colors = usePalette()
 const Drawer = createDrawerNavigator()
@@ -659,38 +666,89 @@ function Assessment({navigation}) {
     )
 }
 
+const NUM_ITEMS = 10;
+
+const initialData = [...Array(NUM_ITEMS)].map((item, index) => {
+    
+    function getColor (i, numItems) {
+        const multiplier = 255 / (numItems - 1);
+        const colorVal = i * multiplier;
+        return `rgb(${255 - colorVal}, ${128 - colorVal}, ${colorVal})`;
+    }
+
+    return {
+        text: `${index}`,
+        key: `${index}`,
+        backgroundColor: getColor(index, NUM_ITEMS),
+    }
+})
+
 function Plan({navigation}) {
-    
-    const [plan, setPlan] = useState('')
-
     const dispatch = useDispatch()
-
-    const [actionItems, setActionItems] = useState([])
-
-    function ActionItem({item}) {
-        return (
-            <View>
-                <Text style={[Colors.text]}>{item}</Text>
-            </View>
-        )
-    }
+    const [plan, setPlan] = useState('')
+    const [actionItems, setActionItems] = useState(initialData)
     
-    function AddActionItem() {
+    function ActionItem({item, drag, isActive}) {
         return (
-            <View>
-                <Text style={[Colors.text]}>Add an action item</Text>
+            <ScaleDecorator>
+                <TouchableOpacity
+                    activeOpacity={1}
+                    onLongPress={drag}
+                    disabled={isActive}
+                    style={[
+                        { height: 100, alignItems: 'center', justifyContent: 'center', },
+                        { backgroundColor: isActive ? "red" : item.backgroundColor },
+                    ]}
+                >
+                    <Text style={Colors.text}>{item.text}</Text>
+                </TouchableOpacity>
+            </ScaleDecorator>
+        )
+    }
+
+    function AddActionItem() {
+        const dispatch = useDispatch()
+        const [newActionItem, setNewActionItem] = useState()
+        const [newText, setNewText] = useState('')
+
+        return (
+            <View style={[Colors.container, {height: '20%', width: '90%', marginHorizontal: '5%', marginVertical: '2%'}]}>
+                <Text style={Colors.header}>Add an Action Item</Text>
+                <TextInput
+                    value={newText}
+                    onChangeText={(e)=>setNewText(e)}
+                    multiline
+                    style={[Colors.textInput, {height: 50}]}
+                />
+                <Pressable onPress={()=>{
+                    console.log('add action item')
+                    dispatch(updatePlan({
+                        type: 'add-action-item',
+                        text: newText,
+                    }))
+                }}>
+                    <Ionicons name='checkmark-circle-outline' style={Colors.icon} />
+                </Pressable>
             </View>
         )
     }
 
-    function ActionItemList() {
-        return (
-            <View>
-                {actionItems.map((item, i) => <ActionItem key={i} item={item} />)}
-                <AddActionItem />
-            </View>
-        )
-    }
+    return (
+        <View style={Colors.container}>
+            <AddActionItem />
+            <DraggableFlatList
+                data={actionItems}
+                onDragEnd={({data}) => {
+                    setActionItems(data)
+                }}
+                onRelease={()=>{console.log('released')}}
+                keyExtractor={(item) => item.key}
+                renderItem={ActionItem}
+                style={{height: '80%'}}
+            />
+
+        </View>
+    )
 
     return (
         <DemoDraglist />
