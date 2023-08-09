@@ -7,6 +7,10 @@ export const cameraSlice = createSlice({
     initialState: {
         active: false,
         photos: [],
+        preview: {
+            uri: '',
+            description: '',
+        },
     },
     reducers: {
         toggleCamera: (state) => {
@@ -23,8 +27,14 @@ export const cameraSlice = createSlice({
                 photos: [...state.photos, action.payload]
             })
         },
+        setPreview: (state, action) => {
+            console.log('setting preview: ', action.payload.uri)
+            return Object.assign({}, state, {
+                preview: action.payload,
+            })
+        },
     }
 })
 
-export const {toggleCamera, cameraOff, cameraOn, savePhoto} = cameraSlice.actions
+export const {toggleCamera, cameraOff, cameraOn, savePhoto, setPreview} = cameraSlice.actions
 export default cameraSlice.reducer

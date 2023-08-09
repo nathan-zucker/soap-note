@@ -34,7 +34,7 @@ import {
 } from '../features/soapSlice';
 
 import { addPatient, updatePatient, storeVitalSnap } from '../features/patientsSlice';
-import { cameraOn, cameraOff, savePhoto } from '../features/cameraSlice';
+import { cameraOn, cameraOff, savePhoto, setPreview } from '../features/cameraSlice';
 
 import Timer from './Timer';
 import ExamCamera from './ExamCamera';
@@ -542,10 +542,13 @@ function Exam({navigation}) {
 
     function Thumbnails ({photos}) {
         
+        const dispatch = useDispatch()
+
         return photos.map((photo, i) => {
             return (
                 <Pressable key={i} style={styles.thumbnail} onPress={()=>{
-                    console.log('selecting photo')
+                    dispatch(setPreview(photo))
+                    dispatch(cameraOn())
                 }}>
                     <Image
                         source={{uri: photo.uri}}

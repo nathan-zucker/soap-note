@@ -10,7 +10,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 
 import { IconButton } from "./IconButton";
 
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import usePalette from "../config/styles";
 
 const Colors = usePalette()
@@ -23,6 +23,8 @@ export default function ExamCamera () {
     const [flash, setFlash] = useState(Camera.Constants.FlashMode.off)
     const [flashIcon, setFlashIcon] = useState('flash-off-outline')
     const [preview, setPreview] = useState()
+
+    const selectedPhoto = useSelector(state => state.camera.preview)
 
     const [showDescription, setShowDescription] = useState(false)
     const [photoDescription, setPhotoDescription] = useState('')
@@ -39,6 +41,12 @@ export default function ExamCamera () {
             setHasCameraPermission(cameraStatus.status === 'granted');
         })()
     }, [])
+
+    useEffect(() => {
+        console.log('detected preview update')
+        setPreview(selectedPhoto.uri)
+        setPhotoDescription(selectedPhoto.description)
+    }, [selectedPhoto])
 
     function toggleCameraType() {
         setType(current => (current === CameraType.back ? CameraType.front : CameraType.back))
