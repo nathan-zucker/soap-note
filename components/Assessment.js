@@ -14,7 +14,7 @@ import {storeAssessment} from '../features/soapSlice';
 import { updatePatient } from '../features/patientsSlice';
 
 import usePalette from '../config/styles';
-import { styles } from './SoapNote';
+import { styles } from '../config/stylesheet';
 const Colors = usePalette();
 
 export default function Assessment({navigation}) {

@@ -16,6 +16,7 @@ import {
 } from '../features/soapSlice';
 
 import usePalette from '../config/styles';
+import { styles } from '../config/stylesheet';
 
 const Colors = usePalette();
 
@@ -120,14 +121,3 @@ export function SceneSizeup({navigation}){
         </TouchableWithoutFeedback>
     )
 }
-
-const styles = StyleSheet.create({
-    button: {
-        marginTop: 30,
-        justifyContent: 'center',
-        alignItems: 'center',
-        width: 150,
-        height: 50,
-        backgroundColor: 'limegreen',
-    }
-})

@@ -19,7 +19,7 @@ import { cameraOn, setPreview } from '../features/cameraSlice';
 import ExamCamera from './ExamCamera';
 
 import usePalette from '../config/styles';
-import { styles } from './SoapNote';
+import { styles } from '../config/stylesheet';
 
 const Colors = usePalette()
 

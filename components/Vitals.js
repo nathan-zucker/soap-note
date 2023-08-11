@@ -22,7 +22,7 @@ import { updatePatient, VitalSnap } from '../features/patientsSlice';
 import Timer from './Timer';
 
 import usePalette from '../config/styles';
-import { styles } from './SoapNote';
+import { styles } from '../config/stylesheet';
 
 const Colors = usePalette()
 

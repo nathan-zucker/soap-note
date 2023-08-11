@@ -1,43 +1,8 @@
-import {
-    StyleSheet,
-} from 'react-native';
-
-import { NavigationContainer } from '@react-navigation/native';
-import { createDrawerNavigator } from '@react-navigation/drawer';
-
-import { SceneSizeup } from './SceneSizeup';
-import { Subjective } from './Subjective';
-import Vitals from './Vitals';
-import History from './History';
-import Exam from './Exam';
-import Assessment from './Assessment';
-import Plan from './Plan';
-
-import usePalette from '../config/styles';
-import { styles } from '../config/stylesheet';
+import { StyleSheet } from "react-native"
+import usePalette from "./styles"
 
 const Colors = usePalette()
-const Drawer = createDrawerNavigator()
 
-export default function Soap() {
-    return(
-        <NavigationContainer independent={true}>
-            <Drawer.Navigator
-                initialRouteName='Scene Size-up'
-                screenOptions={Colors.navigator}
-            >
-                <Drawer.Screen name='Scene Size-up' component={SceneSizeup} />
-                <Drawer.Screen name='Subjective' component={Subjective} />
-                <Drawer.Screen name='Vitals' component={Vitals}/>
-                <Drawer.Screen name='History' component={History}/>
-                <Drawer.Screen name='Exam' component={Exam}/>
-                <Drawer.Screen name='Assessment' component={Assessment}/>
-                <Drawer.Screen name='Plan' component={Plan}/>
-            </Drawer.Navigator>
-        </NavigationContainer>
-    )
-}
-/*
 export const styles = StyleSheet.create({
     container: {
         alignItems: 'center',
@@ -133,4 +98,3 @@ export const styles = StyleSheet.create({
         borderRadius: 5,
     },
 })
-*/

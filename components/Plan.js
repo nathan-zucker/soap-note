@@ -4,6 +4,7 @@ import {
     Text,
     TextInput,
 } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import DraggableFlatList, {
     ScaleDecorator,
@@ -17,9 +18,8 @@ import { updatePlan } from '../features/soapSlice';
 import { updatePatient } from '../features/patientsSlice';
 
 import usePalette from '../config/styles';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { styles } from '../config/stylesheet';
 
-import { styles } from './SoapNote';
 const Colors = usePalette();
 
 export default function Plan({navigation}) {

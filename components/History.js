@@ -12,7 +12,7 @@ import { useState } from 'react';
 import { storeHistory } from '../features/soapSlice';
 import { updatePatient } from '../features/patientsSlice';
 import usePalette from '../config/styles';
-import { styles } from './SoapNote';
+import { styles } from '../config/stylesheet';
 
 const Colors = usePalette()
 
