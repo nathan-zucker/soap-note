@@ -17,7 +17,7 @@ import DraggableFlatList, {
 } from "react-native-draggable-flatlist";
 
 import { useSelector, useDispatch } from 'react-redux';
-import { useState, useEffect, useId } from 'react';
+import { useState, useEffect } from 'react';
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -49,11 +49,13 @@ import { DemoDraglist } from './DemoDraglist';
 import usePalette from '../config/styles';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
+import { SceneSizeup } from './SceneSizeup';
+
 const Colors = usePalette()
 const Drawer = createDrawerNavigator()
 const Stack = createNativeStackNavigator();
 
-function SceneSizeup({navigation}){
+function SceneSizeupOld({navigation}){
 
     const soap = useSelector(state=>state.soap)
     const [PMOI, setPMOI] = useState(undefined)
