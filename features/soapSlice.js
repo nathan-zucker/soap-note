@@ -52,12 +52,20 @@ export const soapSlice = createSlice({
             })
         },
         storeVitalsSnapshot: (state, action) =>  {
-            let newVitals = [...state.vitals]
-            let factor = state.timer.factor
-            newVitals.push(new VitalSnap(action.payload.LOC, action.payload.HR * factor, action.payload.RR * factor, action.payload.skin))
-            //console.log("vitals updated --->", newVitals)
             return Object.assign({}, state, {
-                vitals: newVitals
+                vitals: [
+                    ...state.vitals,
+                    Object.assign(
+                        {},
+                        new VitalSnap(
+                            action.payload.LOC,
+                            action.payload.HR * state.timer.factor,
+                            action.payload.RR * state.timer.factor,
+                            action.payload.skin,
+                        ),
+                        action.payload
+                    ),
+                ]
             })
         },
         storeHistory: (state, action) => {

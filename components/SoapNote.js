@@ -38,7 +38,7 @@ import {
     updatePlan,
 } from '../features/soapSlice';
 
-import { addPatient, updatePatient, storeVitalSnap } from '../features/patientsSlice';
+import { addPatient, updatePatient, storeVitalSnap, VitalSnap } from '../features/patientsSlice';
 import { cameraOn, cameraOff, savePhoto, setPreview } from '../features/cameraSlice';
 
 import Timer from './Timer';
@@ -48,8 +48,6 @@ import { DemoDraglist } from './DemoDraglist';
 
 import usePalette from '../config/styles';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-
-import { MainStack } from './Home';
 
 const Colors = usePalette()
 const Drawer = createDrawerNavigator()
@@ -292,18 +290,22 @@ function Vitals({navigation}) {
 
     const dispatch = useDispatch()
     
-    const [vitalSnap, setVitalSnap] = useState({
+    const initialVitals = {
+        factor: 2,
         LOC: '',
         HR: '',
-        pulseQuality: '',
+        HRQ: '',
         RR: '',
-        respirationQuality: '',
+        RRQ: '',
         skin: '',
-    })
+    }
+
+    const [vitalSnap, setVitalSnap] = useState(initialVitals)
     const [timerToggle, toggleTimer] = useState(false)
     const [timerActive, setTimerActive] = useState(false)
     const [timerType, setTimerType] = useState(30)
     const playPauseIcon = useSelector(state=>state.soap.timer.icon)
+    const factor = useSelector(state => state.soap.timer.factor)
 
     const switchTimer = () => {
         if (timerType === 30) {
@@ -316,19 +318,35 @@ function Vitals({navigation}) {
         }
     }
 
+    function devTest () {
+        const testObj = Object.assign({}, initialVitals, {
+            LOC: 'AxO 4',
+            HR: 40,
+            RR: 7,
+            skin: 'pink warm dry',
+        })
+        dispatch(storeVitalsSnapshot(testObj))
+
+        dispatch(updatePatient({
+            name: 'Jane Doe',
+            type: 'vitals',
+            data: Object.assign({}, new VitalSnap(), testObj)
+        }))
+
+        navigation.navigate("History")
+    }
+
     const submit = () => {
 
-        console.log('SOAP ---> ', soap.name)
-        
+        console.log('SOAP ---> ', soap.name, vitalSnap)        
         dispatch(storeVitalsSnapshot(vitalSnap))
-        /*
-        LIVE UPDATE THE PATIENT VIEW
+
         dispatch(updatePatient({
-            name: soap.name || patients[patients.length - 1].name,
+            name: soap.name,
             type: 'vitals',
-            data: vitalSnap,
+            data: Object.assign({}, new VitalSnap(), vitalSnap),
         }))
-        */
+
         navigation.navigate("History")
     }
 
@@ -437,7 +455,7 @@ function Vitals({navigation}) {
 
                             <Button
                                 title='dev test'
-                                onPress={()=>submit('hello, there')}
+                                onPress={devTest}
                             />
                         </View>
                     </View>
@@ -447,16 +465,15 @@ function Vitals({navigation}) {
     )
 }
 
-function History({navigation}) {
-
+function History({navigation}) {    
+    const dispatch = useDispatch()
+    const name = useSelector(state => state.soap.name)
     const [symptoms, updateSymptoms] = useState('')
     const [allergies, updateAllergies] = useState('')
     const [medications, updateMedications] = useState('')
     const [PPMH, updatePPMH] = useState('')
     const [lastOral, updateLastOral] = useState('')
     const [events, updateEvents] = useState('')
-
-    const dispatch = useDispatch()
 
     function submit () {
         const sample = {
@@ -468,16 +485,27 @@ function History({navigation}) {
             events: events,
         }
         dispatch(storeHistory(sample))
+        dispatch(updatePatient({
+            name: name,
+            type: 'history',
+            data: sample,
+        }))
     }
 
     function testJane() {
-        dispatch(storeHistory({
+        const testJaneObj = {
             symptoms: 'L ankle pain, swelling, bruising',
             allergies: 'none',
             medications: 'none',
             PPMH: 'none',
             lastOral: 'last night snacks',
             events: 'fell and got foot jammed in crevasse, hyperextending the ankle.'
+        }
+        dispatch(storeHistory(testJaneObj))
+        dispatch(updatePatient({
+            name: name,
+            type: 'history',
+            data: testJaneObj,
         }))
     }
 
@@ -543,17 +571,13 @@ function History({navigation}) {
 
 function Exam({navigation}) {
     const dispatch = useDispatch()
-
-    const [cameraOpen, toggleCameraOpen] = useState(false)
+    const name = useSelector(state => state.soap.name)
     const cameraActive = useSelector(state => state.camera.active)
     const photos = useSelector(state => state.camera.photos)
-
     const [examDescription, setExamDescription] = useState('')
 
     function Thumbnails ({photos}) {
-        
         const dispatch = useDispatch()
-
         return photos.map((photo, i) => {
             return (
                 <Pressable key={i} style={styles.thumbnail} onPress={()=>{
@@ -614,9 +638,15 @@ function Exam({navigation}) {
                 <Pressable
                     style={[styles.button, {alignSelf: 'center'}]}
                     onPress={()=>{
-                        dispatch(storeExam({
+                        let exam = {
                             photos: [...photos],
                             description: examDescription,
+                        }
+                        dispatch(storeExam(exam))
+                        dispatch(updatePatient({
+                            name: name,
+                            type: 'exam',
+                            data: exam,
                         }))
                         navigation.navigate("Assessment")
                     }}
@@ -629,10 +659,9 @@ function Exam({navigation}) {
 }
 
 function Assessment({navigation}) {
-    
-    const [assessment, setAssessment] = useState('')
-
     const dispatch = useDispatch()
+    const name = useSelector(state => state.soap.name)
+    const [assessment, setAssessment] = useState('')
 
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
@@ -656,8 +685,13 @@ function Assessment({navigation}) {
                 <Pressable
                     style={[styles.button, {alignSelf: 'center'}]}
                     onPress={()=>{
-                        navigation.navigate("Plan")
                         assessment && dispatch(storeAssessment(assessment))
+                        dispatch(updatePatient({
+                            type: 'assessment',
+                            name: name,
+                            data: assessment,
+                        }))
+                        navigation.navigate("Plan")
                     }}
                     >
                     <Text>NEXT</Text>
@@ -668,27 +702,12 @@ function Assessment({navigation}) {
     )
 }
 
-const NUM_ITEMS = 10;
-
-const initialData = [...Array(NUM_ITEMS)].map((item, index) => {
-    
-    function getColor (i, numItems) {
-        const multiplier = 255 / (numItems - 1);
-        const colorVal = i * multiplier;
-        return `rgb(${255 - colorVal}, ${128 - colorVal}, ${colorVal})`;
-    }
-
-    return {
-        text: `${index}`,
-        key: `${index}`,
-        backgroundColor: getColor(index, NUM_ITEMS),
-    }
-})
-
 function Plan({navigation}) {
     const dispatch = useDispatch()
+    const name = useSelector(state => state.soap.name)
     const [plan, setPlan] = useState('')
     const actionItems = useSelector(state => state.soap.plan.actionItems)
+    const soap = useSelector(state => state.soap)
     
     function ActionItem({item, drag, isActive}) {
         return (
@@ -745,8 +764,12 @@ function Plan({navigation}) {
                 <Pressable
                     style={[styles.button, {alignSelf: 'center', marginTop: 5}]}
                     onPress={()=>{
-                        console.log('go back home')
-                        
+                        dispatch(updatePatient({
+                            type: 'plan',
+                            name: name,
+                            data: soap.plan,
+                        }))
+                        navigation.navigate('Vitals')
                     }}
                 >
                     <Text>FINISH</Text>
@@ -775,8 +798,6 @@ function Plan({navigation}) {
 
 export default function Soap() {
     const store = useSelector(state=>state)
-    //console.log(store)
-
     return(
         <NavigationContainer independent={true}>
             <Drawer.Navigator

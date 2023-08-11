@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { Alert } from "react-native";
+import { useSelector } from "react-redux";
 
 export const defaultTimer = {
     type: 30,
@@ -13,6 +14,7 @@ export class VitalSnap {
         let time = new Date().getTime()
         return (
             {
+                factor: 2,
                 time: time,
                 LOC: loc,
                 HR: hr,
@@ -103,7 +105,10 @@ const johnDoe = () => {
                 skin: 'norm',
             },
         ],
-        plan: 'Drink more water and eat meat.'
+        plan: {
+            narrative: 'Drink more water stop eating mcdonalds.',
+            actionItems: [],
+        }
     })
     return JD
 }
@@ -173,25 +178,37 @@ export const patientsSlice = createSlice({
         },
         updatePatient: (state, action) => {
             const { name, type, data } = action.payload
+
+            let patient = state.find(patient => patient.name === name)
+            if (patient === undefined) {
+                console.log('could not find patient')
+                return;
+            }
+            let index = state.indexOf(patient)
+
             switch(type) {
                 case 'vitals':
                     if (data.RR === '' || data.HR === '') { return }
-                    
                     console.log(`update vitals for ${name}`)
-                    let patient = state.find(patient => patient.name === name)
-                    let index = state.indexOf(patient)
-                    let rr = data.RR * patient.timer.factor
-                    let hr = data.HR * patient.timer.factor
+                    
+                    let newVitals = Object.assign({}, data, {
+                        RR: data.RR * data.factor,
+                        HR: data.HR * data.factor
+                    })
+                    delete(newVitals.factor)
 
                     let updatedPatient = Object.assign({}, patient, {
-                        objective: Object.assign({}, patient.objective, {
-                            vitals: [...patient.objective.vitals, Object.assign({}, data, {RR: rr, HR: hr})],
-                        })
+                        vitals: [...patient.vitals, newVitals],
                     })
-                    return [...state.slice(0, index), updatedPatient, ...state.slice(index + 1)]
-
+                    console.log('updated vitals: ', ...updatedPatient.vitals)
+                    
+                    return [...state.slice(0, index), updatedPatient, ...state.slice(index + 1)];
                 case 'history':
-                    return;
+                case 'exam':
+                case 'assessment':
+                case 'plan':
+                    console.log(`updating ${type} for ${name}...`)
+                    return [...state.slice(0, index), Object.assign({}, patient, { [type]: data }), ...state.slice(index + 1)];
                 default: console.log("failed to catch")
             }
 

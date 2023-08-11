@@ -285,6 +285,10 @@ function HomeScreen() {
     
     function PatientPreview({data}) {
         let vitals = data.vitals[data.vitals.length - 1];
+        if (vitals === undefined) {
+            console.log('ERROR, vitals not logged correctly')
+
+        }
         return (
             <View style={[Colors.container, styles.patientPreview]}>
                 
@@ -305,7 +309,7 @@ function HomeScreen() {
 
                 <View>
                     <Text style={Colors.text}>Plan:</Text>
-                    <Text style={Colors.text}>{data.plan}</Text>
+                    <Text style={Colors.text}>{data.plan.narrative}</Text>
                 </View>
 
                 <View>
