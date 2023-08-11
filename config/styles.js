@@ -20,6 +20,7 @@ export default function usePalette() {
         container: {
             backgroundColor: darkMode.background,
             color: 'whitesmoke',
+            padding: 5,
         },
         text: {
             color: 'whitesmoke'
@@ -38,7 +39,7 @@ export default function usePalette() {
             marginLeft: 15,
         },
         textAlt: {
-            color: '#1a1a1a'
+            color: '#5b5d5b'
         },
         button: {
             backgroundColor: '#3b3d3b',    
@@ -62,6 +63,14 @@ export default function usePalette() {
             borderRadius: 5,
             color: 'whitesmoke',
             textAlign: 'left',
+            borderWidth: 3,
+            padding: 5,
+        },
+        content: {
+            backgroundColor: '#3b3d3b',
+            color: 'whitesmoke',
+            borderColor: 'transparent',
+            borderRadius: 5,
             borderWidth: 3,
             padding: 5,
         }

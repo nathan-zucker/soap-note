@@ -107,7 +107,7 @@ const johnDoe = () => {
         ],
         plan: {
             narrative: 'Drink more water stop eating mcdonalds.',
-            actionItems: [],
+            actionItems: ['Drink more water stop eating mcdonalds.',],
         }
     })
     return JD

@@ -1,4 +1,4 @@
-import { View, Text, Pressable, Button, StyleSheet, Dimensions, Alert } from "react-native"
+import { View, Text, Pressable, Button, StyleSheet, Dimensions, Alert, ScrollView } from "react-native"
 import { useSelector, useDispatch } from "react-redux"
 import React, {useEffect, useState} from 'react';
 import {
@@ -23,6 +23,7 @@ const PatientDrawer = createDrawerNavigator();
 const Colors = usePalette()
 
 function Patient({navigation, data}) {
+    
     const dispatch = useDispatch();
 
     function deletePatient(name) {
@@ -68,39 +69,72 @@ function Patient({navigation, data}) {
     }
 
     return (
-        <View key={data.name} style={styles.card}>
+        <ScrollView key={data.name} style={[Colors.container, styles.patientView]} >
             <View style={styles.patientHeader}>
                 <View>
-                    <Text style={{fontWeight: 500}}>{data.name} {data.subjective.age} {data.subjective.sex}</Text>
-                    <Text>CC: {data.subjective.CC}</Text>
+                    <Text style={[Colors.text, {fontWeight: 500}]}>{data.name} {data.subjective.age} {data.subjective.sex}</Text>
+                    <Text style={Colors.text}>CC: {data.subjective.CC}</Text>
                 </View>
                 <View style={{
                     borderWidth: 2, borderColor: 'transparent',
                     flexDirection: "row", gap: 12,
                 }}>
-                <Pressable 
-                    onPress={gotoVitals}
-                    >
-                    <Ionicons name="clipboard" size={32} color="gray" />
-                </Pressable>
                 <Pressable
                     onPress={() => menu(data.name)}
                     >
-                    <Ionicons name="menu" size={32} color="gray" />
+                    <Ionicons name="clipboard-outline" style={Colors.icon} />
                 </Pressable>
                 </View>
             </View>
 
             <View style={styles.vitals}>
                 <VitalsChart vitals={data.vitals} />
+                <View style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 20}}>
+                    <Text style={Colors.text}>Last checked: {`${new Date(data.vitals[data.vitals.length - 1].time).getHours()}:${new Date(data.vitals[data.vitals.length - 1].time).getMinutes()}`}</Text>
+                    <Pressable 
+                        style={[Colors.button, {
+                            paddingVertical: 3,
+                            paddingHorizontal: 10,
+                            borderRadius: 3,
+                        }]}
+                        onPress={()=>{
+                            console.log('load data into soap, then navigate.')
+                        }}
+                    >
+                        <Text style={Colors.text}>check up on vitals</Text>
+                    </Pressable>
+                </View>
+            </View>
+
+            <View style={[Colors.container, {marginVertical: 5}]}>
+                <Text style={Colors.text}>Plan:</Text>
+                {data.plan.actionItems.length >= 1 ?
+                    <View>
+                        <Text style={Colors.text}>{data.plan.actionItems[0]}</Text>
+                        <Pressable
+                            style={[Colors.button, {
+                                paddingVertical: 5,
+                                margin: 5,
+                                width: 90,
+                                alignSelf: 'center',
+                                }]}
+                                onPress={()=>{
+                                    console.log('expand plan')
+                                }}    
+                            >
+                            <Text style={Colors.text}>Expand</Text>
+                        </Pressable>
+                    </View>
+                :
+                    <Text style={Colors.text}>{data.plan.narrative}</Text>
+                }
+                
             </View>
                     
-            <View>
-                <Text>Exam:</Text>
-            </View>
-                    
-            <View>
-                <Text>Plan:</Text>
+            <View style={[Colors.container, {marginVertical: 5}]}>
+                <Text style={Colors.text}>Exam:</Text>
+                <Text style={Colors.text}>{data.exam.description}</Text>
+                {/* PHOTO GALLERY */}
             </View>
 
             <View style={{width: '100%', flexDirection: 'row', justifyContent: 'center'}}>
@@ -108,20 +142,40 @@ function Patient({navigation, data}) {
                     style={{backgroundColor: 'orangered', flexDirection: 'row', justifyContent: 'center', paddingVertical: 2, paddingHorizontal: 6, borderRadius: 15,}}
                     onPress={() => deletePatient(data.name)}    
                     >
-                    <Ionicons name="close-circle-outline" size={16} color="black" />
-                    <Text>Delete</Text>
+                    <Ionicons name="close-circle-outline" style={[Colors.icon, {fontSize: 16}]} />
+                    <Text style={Colors.text}>Delete</Text>
                 </Pressable>
             </View>
-        </View>
+        </ScrollView>
     )
+}
+
+function dotPress ({dataset, index}) {
+    let value = dataset.data[index];
+    let date = new Date(dataset.time[index]);
+    let time = `${date.getHours()}:${date.getMinutes()}`
+    console.log(time, value)
+    Alert.alert(`${time}     ${value}bpm`)
+    return
+}
+
+const vitalsChartConfig = {
+    backgroundGradientFrom: Colors.container.backgroundColor,
+    backgroundGradientTo: Colors.content.backgroundColor,
+    decimalPlaces: 0, // optional, defaults to 2dp
+    color: (opacity = 1) => Colors.container.backgroundColor,
+    labelColor: (opacity = 1) => Colors.content.color,
+    propsForDots: {
+        r: "7",
+    }
 }
 
 const VitalsChart = (props) => {
 
     if (props.vitals.length === 0) { return }
     
-    const height = 80
-    const width = (Dimensions.get("window").width * 0.6 - 12)
+    const height = 100
+    const width = (Dimensions.get("window").width * 0.7 - 12)
 
     const vitals = props.vitals
     //console.log("vitals: ", vitals)
@@ -135,13 +189,13 @@ const VitalsChart = (props) => {
         RR.push(vitals[i]['RR'])
         HRData.push([vitals[i].HR*1, vitals[i].time])
     }
-    //console.log(HRData)
 
     return (
-        <View style={{gap: 5, margin: 5,}}>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+        <View style={{gap: 10, marginVertical: 5}}>
+            <View style={{flexDirection: 'row', alignItems: 'center', gap: 5}}>
                 <LineChart
                     data={{
+                        labels: [...times],
                         datasets: [
                             {
                                 data: HR,
@@ -152,36 +206,22 @@ const VitalsChart = (props) => {
                     }}
                     width={width}
                     height={height}
-                    yAxisSuffix="bpm"
-                    chartConfig={{
-                        backgroundColor: "transparent",
-                        backgroundGradientFrom: "white",
-                        backgroundGradientTo: "white",
-                        decimalPlaces: 0, // optional, defaults to 2dp
-                        color: (opacity = 1) => 'black',
-                        labelColor: (opacity = 1) => 'black',
-                        style: {
-                            borderRadius: 16,
-                        },
-                        propsForDots: {
-                            r: "7",
+                    fromZero={true}
+                    fromNumber={Math.max(...HR)+20}
+                    onDataPointClick={dotPress}
+                    yAxisSuffix='bpm'
+                    formatXLabel={(d)=>'hi'}
+                    chartConfig={vitalsChartConfig}
+                    getDotColor={(d, i) => {
+                        if (d <= 100 && d >= 60) {
+                            return 'limegreen';
                         }
-                        }}
-                        getDotColor={(d, i) => {
-                            if (d <= 100 && d >= 60) {
-                                return 'limegreen';
-                            }
-                            else {
-                                return 'orangered';
-                            }
-                        }}
-                        bezier
-                        style={{
-                            borderRadius: 5,
-                            borderColor: 'black',
-                            borderWidth: 3,
-                            width: width + 8,
-                        }}
+                        else {
+                            return 'orangered';
+                        }
+                    }}
+                    bezier
+                    style={styles.chart}
                     
                 />
                 <View style={styles.box}>
@@ -199,7 +239,7 @@ const VitalsChart = (props) => {
                     })}>{HR[HR.length - 1]}</Text>
                 </View>
             </View>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <View style={{flexDirection: 'row', alignItems: 'center', gap: 5,}}>
                 <LineChart
                     data={{
                         datasets: [
@@ -211,21 +251,11 @@ const VitalsChart = (props) => {
                     }}
                     width={width}
                     height={height}
+                    fromZero={true}
+                    fromNumber={Math.max(...RR) + 10}
+                    onDataPointClick={dotPress}
                     yAxisSuffix="bpm"
-                    chartConfig={{
-                        backgroundColor: "transparent",
-                        backgroundGradientFrom: "white",
-                        backgroundGradientTo: "white",
-                        decimalPlaces: 0, // optional, defaults to 2dp
-                        color: (opacity = 1) => 'black',
-                        labelColor: (opacity = 1) => 'black',
-                        style: {
-                            borderRadius: 16,
-                        },
-                        propsForDots: {
-                            r: "7",
-                        }
-                        }}
+                    chartConfig={vitalsChartConfig}
                         getDotColor={(d, i) => {
                             if (d <= 20 && d >= 12) {
                                 return 'limegreen';
@@ -235,12 +265,7 @@ const VitalsChart = (props) => {
                             }
                         }}
                         bezier
-                        style={{
-                            borderRadius: 5,
-                            borderColor: 'black',
-                            borderWidth: 3,
-                            width: width + 8,
-                        }}
+                        style={styles.chart}
                     
                 />
                 <View style={styles.box}>
@@ -263,7 +288,7 @@ const VitalsChart = (props) => {
 
 }
 
-function HomeScreen() {
+function HomeScreen({navigation}) {
 
     const patientsData = useSelector((state) => state.patients)
     const soapNote = useSelector((state) => state.soap)
@@ -282,34 +307,34 @@ function HomeScreen() {
         let vitals = data.vitals[data.vitals.length - 1];
         if (vitals === undefined) {
             console.log('ERROR, vitals not logged correctly')
-
+            return;
         }
         return (
             <View style={[Colors.container, styles.patientPreview]}>
-                
-                <Text style={Colors.text}>{data.PMOI ? <Text style={[Colors.text, {color: 'orangered'}]}> \u26A0</Text> : null}{data.name}</Text>
-                
-                <View style={{flexDirection: 'row', alignItems: 'center', gap: 15,}}>
-                    <Ionicons name='pulse' style={Colors.icon} />
-                    <View>
-                        <View style={{flexDirection: 'row', gap: 15}}>
-                            <Text style={[Colors.text]}>HR: {vitals.HR}</Text>
-                            <Text style={Colors.text}>RR: {vitals.RR}</Text>
-                        </View>
+                <Pressable
+                    onPress={()=>{navigation.navigate(data.name)}}
+                >
+                    <Text style={Colors.text}>{data.PMOI ? <Text style={[Colors.text, {color: 'orangered'}]}> \u26A0</Text> : null}{data.name}</Text>
+                    
+                    <View style={{flexDirection: 'row', alignItems: 'center', gap: 15,}}>
+                        <Ionicons name='pulse' style={Colors.icon} />
                         <View>
-                            <Text style={Colors.text}>Last Checked: {Math.floor(new Date(Date.now() - vitals.time) / 60000)} minutes ago</Text>
+                            <View style={{flexDirection: 'row', gap: 15}}>
+                                <Text style={[Colors.text]}>HR: {vitals.HR}</Text>
+                                <Text style={Colors.text}>RR: {vitals.RR}</Text>
+                            </View>
+                            <View>
+                                <Text style={Colors.text}>Last Checked: {Math.floor(new Date(Date.now() - vitals.time) / 60000)} minutes ago</Text>
+                            </View>
                         </View>
                     </View>
-                </View>
 
-                <View>
-                    <Text style={Colors.text}>Plan:</Text>
-                    <Text style={Colors.text}>{data.plan.narrative}</Text>
-                </View>
+                    <View>
+                        <Text style={Colors.text}>Plan:</Text>
+                        <Text style={Colors.text}>{data.plan.narrative}</Text>
+                    </View>
 
-                <View>
-                    <IconButton icon='clipboard' text='clipboard' />
-                </View>
+                </Pressable>
 
             </View>
         )
@@ -351,6 +376,11 @@ export default function PatientView() {
 }
 
 const styles = StyleSheet.create({
+    chart: {
+        borderColor: Colors.content.backgroundColor,
+        borderWidth: 3,
+        borderRadius: 3,
+    },
     container: {
         justifyContent: 'center',
         alignItems: 'center',
@@ -360,8 +390,12 @@ const styles = StyleSheet.create({
         gap: 5,
         paddingTop: 5,
     },
+    patientView: {
+        paddingHorizontal: 20,
+        paddingTop: 10,
+    },
     patientPreview: {
-        borderColor: Colors.text.color,
+        borderColor: Colors.textAlt.color,
         borderWidth: 2,
         padding: 5,
         width: '90%',
@@ -378,6 +412,7 @@ const styles = StyleSheet.create({
     },
     label: {
         fontSize: 20,
+        color: Colors.text.color,
     },
     value: {
         fontSize: 25,
@@ -385,7 +420,8 @@ const styles = StyleSheet.create({
     },
     box: {
         borderWidth: 2,
-        borderColor: 'black',
+        borderColor: Colors.textAlt.color,
+        borderRadius: 5,
         width: '20%',
         height: 80,
         alignItems: 'center',
@@ -394,5 +430,6 @@ const styles = StyleSheet.create({
     patientHeader: {
         flexDirection: 'row',
         justifyContent: 'space-between',
+        paddingHorizontal: 5,
     }
 })

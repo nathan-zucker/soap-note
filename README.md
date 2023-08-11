@@ -34,6 +34,9 @@ https://primereact.org/installation/
 ### Ionicons
 https://ionic.io/ionicons/v4
 
+### React Native Chart Kit
+https://www.npmjs.com/package/react-native-chart-kit
+
 ### React Native Reanimated
 https://docs.swmansion.com/react-native-reanimated/docs/fundamentals/installation
 
