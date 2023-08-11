@@ -3,44 +3,17 @@ import {
     Pressable,
     Text,
     TextInput,
-    StyleSheet,
     Keyboard,
     TouchableWithoutFeedback,
-    Button,
-    Image,
 } from 'react-native';
-import Ionicons from '@expo/vector-icons/Ionicons';
-import DraggableFlatList, {
-    ScaleDecorator,
-    RenderItemParams,
-} from "react-native-draggable-flatlist";
 
 import { useSelector, useDispatch } from 'react-redux';
 import { useState } from 'react';
 
-import { NavigationContainer } from '@react-navigation/native';
-import { createDrawerNavigator } from '@react-navigation/drawer';
-
-import {
-    storeVitalsSnapshot,
-    storeHistory,
-    changeTimerType,
-    startStopState,
-    storeExam,
-    storeAssessment,
-    storePlan,
-    updatePlan,
-} from '../features/soapSlice';
-
-import { addPatient, updatePatient, storeVitalSnap, VitalSnap } from '../features/patientsSlice';
-import { cameraOn, cameraOff, savePhoto, setPreview } from '../features/cameraSlice';
-
-import Timer from './Timer';
-import ExamCamera from './ExamCamera';
+import {storeAssessment} from '../features/soapSlice';
+import { updatePatient } from '../features/patientsSlice';
 
 import usePalette from '../config/styles';
-import { TouchableOpacity } from 'react-native-gesture-handler';
-
 import { styles } from './SoapNote';
 const Colors = usePalette();
 

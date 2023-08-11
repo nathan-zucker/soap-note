@@ -3,11 +3,6 @@ import {
     Pressable,
     Text,
     TextInput,
-    StyleSheet,
-    Keyboard,
-    TouchableWithoutFeedback,
-    Button,
-    Image,
 } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import DraggableFlatList, {
@@ -18,25 +13,8 @@ import DraggableFlatList, {
 import { useSelector, useDispatch } from 'react-redux';
 import { useState } from 'react';
 
-import { NavigationContainer } from '@react-navigation/native';
-import { createDrawerNavigator } from '@react-navigation/drawer';
-
-import {
-    storeVitalsSnapshot,
-    storeHistory,
-    changeTimerType,
-    startStopState,
-    storeExam,
-    storeAssessment,
-    storePlan,
-    updatePlan,
-} from '../features/soapSlice';
-
-import { addPatient, updatePatient, storeVitalSnap, VitalSnap } from '../features/patientsSlice';
-import { cameraOn, cameraOff, savePhoto, setPreview } from '../features/cameraSlice';
-
-import Timer from './Timer';
-import ExamCamera from './ExamCamera';
+import { updatePlan } from '../features/soapSlice';
+import { updatePatient } from '../features/patientsSlice';
 
 import usePalette from '../config/styles';
 import { TouchableOpacity } from 'react-native-gesture-handler';
@@ -78,14 +56,6 @@ export default function Plan({navigation}) {
 
         return (
             <View style={[Colors.container, {height: 80, width: '90%', marginHorizontal: '5%', marginVertical: '2%'}]}>
-                <Pressable onPress={()=>{
-                    console.log('add action item')
-                    dispatch(updatePlan({
-                        type: 'add-action-item',
-                        text: newText,
-                        key: key || 0,
-                    }))
-                }}>
                 <Text style={Colors.header}>Add an Action Item</Text>
                 <TextInput
                     value={newText}
@@ -93,6 +63,15 @@ export default function Plan({navigation}) {
                     multiline
                     style={[Colors.textInput, {height: 50}]}
                 />
+                <Pressable onPress={()=>{
+                    if (newText === '') {return}
+                    console.log('add action item')
+                    dispatch(updatePlan({
+                        type: 'add-action-item',
+                        text: newText,
+                        key: key || 0,
+                    }))
+                }}>
                     <Ionicons name='checkmark-circle-outline' style={Colors.icon} />
                 </Pressable>
             </View>

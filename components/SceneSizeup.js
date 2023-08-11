@@ -21,11 +21,9 @@ const Colors = usePalette();
 
 export function SceneSizeup({navigation}){
 
-    const soap = useSelector(state=>state.soap)
     const [PMOI, setPMOI] = useState(undefined)
     const [MOI, setMOI] = useState('')
     const [NOI, setNOI] = useState('')
-    const [moiIcon, setMoiIcon] = useState('flash-off')
 
     const dispatch = useDispatch()
 

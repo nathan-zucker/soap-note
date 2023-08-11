@@ -14,13 +14,8 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import 'react-native-gesture-handler';
 import { createDrawerNavigator } from "@react-navigation/drawer";
 
-
-import VitalsCheckup from "./VitalsCheckup";
-
-import { updatePatient } from "../features/patientsSlice";
-import { loadPatient, changeTimerType, newSoap } from "../features/soapSlice";
+import { loadPatient } from "../features/soapSlice";
 import usePalette from "../config/styles";
-import { ScreenOptions } from "../config/navigator";
 
 import { IconButton } from "./IconButton";
 

@@ -7,13 +7,11 @@ import {
     Keyboard,
     TouchableWithoutFeedback,
     Button,
-    Switch,
-    Image,
 } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
 import { useSelector, useDispatch } from 'react-redux';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 import { storeSubjective } from '../features/soapSlice';
 import { addPatient } from '../features/patientsSlice';
