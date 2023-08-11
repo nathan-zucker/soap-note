@@ -1,6 +1,5 @@
 # TODO:
-[] build Assessment screen
-[] build Plan screen
+[] finish plan screen
 [] build Patients Overview screen
 [] build individual patient screen
 [] update patients with current soap when navigating to patients
