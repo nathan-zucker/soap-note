@@ -1,3 +1,4 @@
+import { StyleSheet } from "react-native"
 import { darkMode } from "./colorPalette"
 
 export const container = {
