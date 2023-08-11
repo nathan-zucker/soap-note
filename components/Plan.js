@@ -23,8 +23,25 @@ import { styles } from '../config/stylesheet';
 const Colors = usePalette();
 
 function getBlockColor(length, index) {
-    const colorFactor = Math.floor(255 / length);
-    return `rgb(${ 255 - ( colorFactor * index ) },${ 128 - ( colorFactor * index ) },${ colorFactor * index })`
+    let colorFactor;
+    length < 5 ? colorFactor = 51 : colorFactor = Math.floor(255 / length) ;
+    
+    const scalarR = 0.3;
+    const scalarG = 0.5;
+    const scalarB = 0.8;
+
+    const R = 255 - ( colorFactor * index * scalarR );
+    const G = 75 - ( colorFactor * index * scalarG );
+    const B = colorFactor * index * scalarB;
+    
+
+    const rgb = {
+        r: R > 0 ? R : 0,
+        g: G > 0 ? G : 0,
+        b: B > 0 ? B : 0,
+    }
+
+    return `rgb(${ rgb.r },${ rgb.g },${ rgb.b })`
 }
 
 function ActionItem({item, drag, isActive}) {
@@ -44,6 +61,8 @@ function ActionItem({item, drag, isActive}) {
                     alignItems: 'center',
                     justifyContent: 'center',
                     paddingHorizontal: 5,
+                    marginVertical: 2,
+                    marginHorizontal: 5,
                 }}
             >
                 <Text style={Colors.text}>{item.text}</Text>
@@ -81,7 +100,7 @@ export default function Plan({navigation}) {
                     dispatch(updatePlan({
                         type: 'add-action-item',
                         text: newText,
-                        key: key || 0,
+                        key: key,
                     }))
                 }}>
                     <Ionicons name='checkmark-circle-outline' style={Colors.icon} />
