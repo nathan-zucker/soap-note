@@ -3,6 +3,7 @@ import store from './app/store';
 import { NavigationContainer } from '@react-navigation/native';
 
 import Home from './components/Home';
+import Animated from 'react-native-reanimated';
 
 export default function App() {
     

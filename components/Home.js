@@ -24,7 +24,9 @@ export default function Home() {
             <MainStack.Navigator
                 name='MainStack'
                 initialRouteName="Home"
-                screenOptions={Colors.navigator}
+                screenOptions={Object.assign({}, Colors.navigator, {
+                  gestureEnabled: false
+                })}
             >
                 <MainStack.Screen name='Home' id='Home' component={LaunchScreen}  />
                 <MainStack.Screen

@@ -67,7 +67,7 @@ export default function Exam({navigation}) {
 
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-            <View style={[Colors.container, {height: '100%'}]}>
+            <View style={[Colors.container, {height: '100%', padding: 0,}]}>
 
                 {cameraActive ? <ExamCamera/> : <PhotoGallery/> }
                 

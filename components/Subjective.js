@@ -17,6 +17,8 @@ import { storeSubjective } from '../features/soapSlice';
 import { addPatient } from '../features/patientsSlice';
 import usePalette from '../config/styles';
 
+import { getAgeTag } from '../utils/normalVitals';
+
 const Colors = usePalette()
 
 export function Subjective({navigation}){
@@ -129,13 +131,15 @@ export function Subjective({navigation}){
                 onPress={()=>{
                     const testSub = {
                         patientName: 'Jane Doe',
-                        age: '32',
+                        age: 32,
                         sex: 'F',
                         CC: 'unknown',
                         impression: 'prone near bed, no obvious wounds'
                     }
                     dispatch(storeSubjective(testSub))
                     dispatch(addPatient(testSub))
+                    
+                    console.log(getAgeTag({age: testSub.age}))
                     navigation.navigate("Vitals")
                 }}
             />

@@ -116,7 +116,6 @@ export default function ExamCamera () {
         <View>
         {preview ? 
             <View>
-                
                 <Image source={{uri: preview}} style={styles.imagePreview} />
                 
                 {showDescription ? <AddDescription /> :
@@ -133,6 +132,7 @@ export default function ExamCamera () {
                         console.log('save photo')
                         dispatch(savePhoto({uri: preview, description: photoDescription}))
                         setPreview(undefined)
+                        dispatch(cameraOff())
                     }}>
                         <Ionicons style={styles.imageButton} name='checkmark-circle-outline' />
                         <Text style={styles.imageButtonLabel}>save</Text>

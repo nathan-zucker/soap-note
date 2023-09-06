@@ -24,7 +24,9 @@ export default function Soap() {
         <NavigationContainer independent={true}>
             <Drawer.Navigator
                 initialRouteName='Scene Size-up'
-                screenOptions={Colors.navigator}
+                screenOptions={Object.assign({}, Colors.navigator, {
+                    gestureEnabled: true
+                })}
             >
                 <Drawer.Screen name='Scene Size-up' component={SceneSizeup} />
                 <Drawer.Screen name='Subjective' component={Subjective} />

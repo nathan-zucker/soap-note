@@ -17,7 +17,7 @@ import { createDrawerNavigator } from "@react-navigation/drawer";
 import { loadPatient } from "../features/soapSlice";
 import usePalette from "../config/styles";
 
-import { IconButton } from "./IconButton";
+import { isPulseNormal, isRespirationNormal } from "../utils/normalVitals";
 
 const PatientDrawer = createDrawerNavigator();
 const Colors = usePalette()
