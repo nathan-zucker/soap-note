@@ -1,13 +1,20 @@
 # TODO:
-[] finish plan screen /n
+[] finish plan screen
+
 [] build Patients Overview screen
+
 [] build individual patient screen
+
 [] update patients with current soap when navigating to patients
+
 [] incorporate Redux Persist
+
 [] export data?
 
 [] Add location and weather services
+
 [] Add phone integration ?
+
 [] Add face blurring and privacy mode
 
 
