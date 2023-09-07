@@ -1,5 +1,5 @@
 # TODO:
-[] finish plan screen \
+[] finish plan screen \\
 [] build Patients Overview screen
 
 [] build individual patient screen
